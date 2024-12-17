@@ -8,5 +8,19 @@
 
 ## updated
 
-- example code: trackracer
-- evaluation form (+js): find my way
+<table>
+    <tr>
+     <th colspan="11">Date</th>
+     <th colspan="11">Menu</th>
+      <th colspan="11">update</th>
+    </tr>
+ <tr>
+      <td colspan="11">17/12/24</td>
+  <td colspan="11">Trackracer</td>
+      <td colspan="11" style="background-color:pink;">Example code</td>
+    </tr>
+ <tr>
+      <td colspan="11">17/12/24</td>
+  <td colspan="11">Find my way</td>
+      <td colspan="11" style="background-color:pink;">Evaluation form (+js)</td>
+    </tr>
