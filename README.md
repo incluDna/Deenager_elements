@@ -1,6 +1,7 @@
 # Deenager_elements
 
-<img src="https://github.com/user-attachments/assets/04aff52d-2616-408f-a75b-45448a1b6ea9" width="250px;" height="150px"/>
+<img src="https://github.com/user-attachments/assets/04aff52d-2616-408f-a75b-45448a1b6ea9" width="270px;" height="135px"/>
 
 
-<img src="https://github.com/user-attachments/assets/bf97118a-9f2d-43ab-a6ea-55f6a3ce19cb" width="400px;" height="150px"/>
+
+<img src="https://github.com/user-attachments/assets/4a0b332a-b588-4c09-be04-c4955ae4fd39" width="350px;" height="200px">
