@@ -22,7 +22,7 @@
  <tr>
       <td colspan="11">17/12/24</td>
   <td colspan="11">Trackracer</td>
-      <td colspan="11" style="background-color:pink;">Example code</td>
+      <td colspan="11" style="background-color:pink;">Sample code</td>
     </tr>
  <tr>
       <td colspan="11">17/12/24</td>
