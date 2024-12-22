@@ -27,8 +27,8 @@
       <td colspan="11" style="background-color:pink;">Sample code✅</td>
     </tr>
  <tr>
-      <td colspan="11">21/12/24</td>
+      <td colspan="11">22/12/24</td>
   <td colspan="11">Find my way</td>
-      <td colspan="11" style="background-color:pink;">Evaluation form (+js)</td>
+      <td colspan="11" style="background-color:pink;">Data for Evaluation form</td>
     </tr>
 
