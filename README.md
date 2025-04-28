@@ -10,25 +10,9 @@
 
 ## plan for updating
 
-<table>
-    <tr>
-     <th colspan="11">Date</th>
-     <th colspan="11">Menu</th>
-      <th colspan="11">update</th>
-    </tr>
- <tr>
-      <td colspan="11">16/12/24</td>
-  <td colspan="11">Trackracer</td>
-      <td colspan="11" style="background-color:pink;"><a href="https://www.figma.com/design/vUyVUbrBsV791vrSh9eOJ4/Untitled-(Copy)?node-id=0-1&t=3gOv4XgdvKoPgvE7-1">Design in Figma✅</a></td>
-    </tr>
- <tr>
-      <td colspan="11">17/12/24</td>
-  <td colspan="11">Trackracer</td>
-      <td colspan="11" style="background-color:pink;">Sample code✅</td>
-    </tr>
- <tr>
-      <td colspan="11">22/12/24</td>
-  <td colspan="11">Find my way</td>
-      <td colspan="11" style="background-color:pink;"><a href="https://docs.google.com/spreadsheets/d/1BPd-kDg8Wr2cj-mtvZjf6kM8DH8r82Vtb2EFzFIjVCs/edit?usp=sharing">Data for Evaluation form v1✅</a></td>
-    </tr>
-
+|  Date | Menu | Update |
+|:--------:|:--------:|:---------|
+| 16/12/24 | Trackracer | [Design in Figma✅](https://www.figma.com/design/vUyVUbrBsV791vrSh9eOJ4/Untitled-(Copy)?node-id=0-1&t=3gOv4XgdvKoPgvE7-1) |
+| 17/12/24 | Trackracer | Sample code✅ |
+| 22/12/24 | Find my way | [Data for Evaluation form v1✅](https://docs.google.com/spreadsheets/d/1BPd-kDg8Wr2cj-mtvZjf6kM8DH8r82Vtb2EFzFIjVCs/edit?usp=sharing) |
+| 28/12/24 | overall | Web design(figma) |
