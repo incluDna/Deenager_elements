@@ -1,4 +1,4 @@
-basic style before implement (waiting for auth, db)
+basic style before implement (waiting for auth, db), ใช้ style อยู่ ยังไม่เป้น tailwind(className)
 
 src/
 
