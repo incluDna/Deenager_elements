@@ -1,3 +1,5 @@
+basic style before implement (waiting for auth, db)
+
 src/
 
  ├── App.tsx
