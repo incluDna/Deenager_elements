@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trackracing 🚂</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Russo+One&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1f2937;
+  --border: rgba(255,255,255,0.08);
+  --gold: #f5d97e;
+  --accent: #ff6b35;
+  --blue: #1a56db;
+  --sign-blue: #003087;
+  --sign-border: #fff;
+  --green: #22c55e;
+  --red: #ef4444;
+  --text: #e8eaf6;
+  --muted: #6b7a99;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---- HEADER ---- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: rgba(13,17,23,0.95);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(12px);
+}
+
+.logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #ff6b35, #f5d97e, #ff6b35);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+  text-shadow: none;
+}
+@keyframes shimmer {
+  0% { background-position: 0% } 100% { background-position: 200% }
+}
+
+.logo span { -webkit-text-fill-color: #f5d97e; }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.datetime {
+  display: flex;
+  gap: 8px;
+}
+
+.date-badge, .time-badge {
+  background: rgba(245,217,126,0.12);
+  border: 1px solid rgba(245,217,126,0.3);
+  color: var(--gold);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: 'Orbitron', monospace;
+}
+
+/* ---- TABS ---- */
+.tab-nav {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px 0;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  color: var(--muted);
+  padding: 8px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.25s;
+  display: flex; align-items: center; gap: 6px;
+}
+.tab-btn:hover { border-color: var(--gold); color: var(--gold); }
+.tab-btn.active {
+  background: rgba(245,217,126,0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 16px rgba(245,217,126,0.15);
+}
+
+/* ---- MAIN LAYOUT ---- */
+.main {
+  padding: 16px 24px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.route-info-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.route-title-main {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.route-title-main span {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+.btn-join {
+  background: linear-gradient(135deg, #f5d97e, #ff9a3c);
+  color: #1a1200;
+  border: none;
+  padding: 8px 22px;
+  border-radius: 24px;
+  font-family: 'Sarabun', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(245,217,126,0.25);
+}
+.btn-join:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,217,126,0.35); }
+.btn-join:active { transform: scale(0.97); }
+.btn-join.running {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 4px 16px rgba(239,68,68,0.3);
+}
+
+.btn-share {
+  background: rgba(26,86,219,0.15);
+  border: 1.5px solid #1a56db;
+  color: #60a5fa;
+  padding: 7px 18px;
+  border-radius: 24px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-share:hover { background: rgba(26,86,219,0.25); }
+
+.timer-display {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  color: var(--gold);
+  font-weight: 700;
+  background: rgba(245,217,126,0.1);
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(245,217,126,0.25);
+  letter-spacing: 2px;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* ---- PANORAMA SCENE ---- */
+.scene-container {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  position: relative;
+  background: #0d2040;
+  height: 280px;
+}
+
+.scene-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---- PROGRESS DOTS on track ---- */
+.track-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  pointer-events: none;
+  height: 100%;
+}
+
+/* ---- INFO CARDS ---- */
+.info-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.info-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: border-color 0.2s;
+}
+.info-card:hover { border-color: rgba(245,217,126,0.3); }
+.info-card .ic { font-size: 1.3rem; }
+.info-card .ic-name { font-size: 0.85rem; font-weight: 700; color: var(--gold); margin: 4px 0 2px; }
+.info-card .ic-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+/* ---- RANKING TABLE ---- */
+.ranking-section {
+  margin-top: 20px;
+}
+
+.ranking-header {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px 120px 100px;
+  background: rgba(26,86,219,0.2);
+  border: 1px solid rgba(26,86,219,0.4);
+  border-radius: 10px 10px 0 0;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #93c5fd;
+  gap: 8px;
+  align-items: center;
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px 120px 100px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+  gap: 8px;
+  align-items: center;
+  transition: background 0.2s;
+  background: rgba(255,255,255,0.02);
+}
+.ranking-row:hover { background: rgba(255,255,255,0.05); }
+.ranking-row:last-child { border-radius: 0 0 10px 10px; border-bottom: 1px solid rgba(26,86,219,0.3); }
+
+.rank-num {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.rank-1 { color: #fbbf24; }
+.rank-2 { color: #94a3b8; }
+.rank-3 { color: #cd7f32; }
+
+.user-cell {
+  display: flex; align-items: center; gap: 10px;
+}
+
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  border: 2px solid transparent;
+  position: relative;
+  flex-shrink: 0;
+}
+.avatar.online { border-color: var(--green); }
+.avatar.me { border-color: var(--gold); box-shadow: 0 0 10px rgba(245,217,126,0.4); }
+
+.avatar-bounce {
+  animation: bounce 1.5s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.status-dot {
+  position: absolute; bottom: -2px; right: -2px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+}
+.status-dot.active { background: var(--green); animation: pulse-dot 2s infinite; }
+.status-dot.idle { background: #94a3b8; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.user-name { font-weight: 600; font-size: 0.9rem; }
+.user-name.me { color: var(--gold); }
+
+.hrs-cell {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85rem;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.goal-bar {
+  display: flex; align-items: center; gap: 8px;
+}
+.goal-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.goal-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #84cc16);
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+.goal-pct { font-size: 0.75rem; color: var(--muted); min-width: 32px; }
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.status-badge.active {
+  background: rgba(34,197,94,0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34,197,94,0.3);
+}
+.status-badge.idle {
+  background: rgba(148,163,184,0.1);
+  color: #94a3b8;
+  border: 1px solid rgba(148,163,184,0.2);
+}
+
+/* ---- MODAL ---- */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: #1a2035;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 28px;
+  width: 90%; max-width: 420px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  transform: translateY(20px);
+  transition: transform 0.2s;
+}
+.modal-overlay.show .modal { transform: translateY(0); }
+
+.modal h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--gold);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.modal-close {
+  float: right;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.modal-close:hover { color: var(--text); }
+
+.share-options {
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.share-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.share-option:hover { border-color: var(--gold); background: rgba(245,217,126,0.05); }
+.share-option.selected { border-color: var(--gold); background: rgba(245,217,126,0.1); }
+
+.share-option-icon { font-size: 1.5rem; }
+.share-option-title { font-weight: 700; font-size: 0.9rem; }
+.share-option-desc { font-size: 0.78rem; color: var(--muted); }
+
+.share-link-box {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-top: 12px;
+  word-break: break-all;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+
+.copy-btn {
+  background: rgba(245,217,126,0.15);
+  border: 1px solid rgba(245,217,126,0.3);
+  color: var(--gold);
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.copy-btn:hover { background: rgba(245,217,126,0.25); }
+.copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+.or-divider {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 10px 0;
+}
+
+.code-input {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: 'Orbitron', monospace;
+  font-size: 1rem;
+  text-align: center;
+  letter-spacing: 4px;
+  outline: none;
+}
+.code-input:focus { border-color: var(--gold); }
+
+/* ---- Thai road sign style ---- */
+.road-sign {
+  background: #003087;
+  border: 3px solid white;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  font-family: 'Sarabun', sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.15);
+  display: inline-block;
+  line-height: 1.4;
+  text-align: center;
+  letter-spacing: 0.3px;
+  position: relative;
+}
+.road-sign::after {
+  content: '';
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 2px; height: 8px;
+  background: #aaa;
+}
+
+/* Train on track */
+#train-wrap {
+  position: absolute;
+  bottom: 55px;
+  transition: left 2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.train-svg {
+  display: block;
+}
+
+/* Friends on track */
+.friend-avatar-track {
+  position: absolute;
+  bottom: 52px;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px;
+}
+
+.friend-pip {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 2px solid #22c55e;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  background: #1a2035;
+  animation: friend-bob 2s ease-in-out infinite;
+}
+
+@keyframes friend-bob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.05); }
+}
+
+.friend-pip.idle {
+  border-color: #94a3b8;
+  animation: none;
+  opacity: 0.6;
+}
+
+.track-dot {
+  position: absolute;
+  bottom: 50px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid #1a1200;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+canvas#scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+/* Active session glow */
+.scene-container.active-session {
+  box-shadow: 0 0 0 2px rgba(245,217,126,0.4), 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .ranking-header, .ranking-row {
+    grid-template-columns: 40px 1fr 70px 80px 80px;
+    font-size: 0.78rem;
+    padding: 8px 10px;
+  }
+  .logo { font-size: 1.2rem; }
+  .main { padding: 12px 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">Tr<span>🚂</span>ckracing</div>
+  <div class="header-right">
+    <div class="datetime">
+      <div class="date-badge" id="date-display">--</div>
+      <div class="time-badge" id="time-display">--:--</div>
+    </div>
+  </div>
+</div>
+
+<!-- ROUTE TABS -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="selectRoute(0)">🌲 สายเหนือ</button>
+  <button class="tab-btn" onclick="selectRoute(1)">🌾 สายอีสาน</button>
+  <button class="tab-btn" onclick="selectRoute(2)">🌊 สายใต้</button>
+  <button class="tab-btn" onclick="selectRoute(3)">🛒 สายแม่กลอง</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="route-info-bar">
+    <div class="route-title-main" id="route-title-text">สายเหนือ — กรุงเทพ → เชียงใหม่ <span>ระยะทาง ~750 กม.</span></div>
+    <button class="btn-join" id="join-btn" onclick="toggleSession()">▶ join track</button>
+    <div class="timer-display" id="timer-display">00:00:00</div>
+    <button class="btn-share" onclick="openShareModal()">🔗 share track</button>
+  </div>
+
+  <!-- SCENE -->
+  <div class="scene-container" id="scene-container">
+    <canvas id="scene"></canvas>
+
+    <!-- Train -->
+    <div id="train-wrap" style="left: 4%">
+      <svg width="80" height="34" viewBox="0 0 80 34" class="train-svg">
+        <rect x="0" y="4" width="56" height="22" rx="4" fill="#c0392b"/>
+        <rect x="4" y="7" width="11" height="9" rx="1" fill="#aee6f7" opacity="0.9"/>
+        <rect x="17" y="7" width="11" height="9" rx="1" fill="#aee6f7" opacity="0.9"/>
+        <rect x="30" y="7" width="11" height="9" rx="1" fill="#aee6f7" opacity="0.9"/>
+        <rect x="56" y="7" width="20" height="19" rx="3" fill="#922b21"/>
+        <rect x="58" y="10" width="8" height="7" rx="1" fill="#aee6f7" opacity="0.7"/>
+        <rect x="68" y="10" width="5" height="7" rx="1" fill="#aee6f7" opacity="0.7"/>
+        <circle cx="12" cy="28" r="5" fill="#222"/>
+        <circle cx="12" cy="28" r="2.5" fill="#555"/>
+        <circle cx="44" cy="28" r="5" fill="#222"/>
+        <circle cx="44" cy="28" r="2.5" fill="#555"/>
+        <circle cx="68" cy="28" r="4" fill="#222"/>
+        <circle cx="68" cy="28" r="2" fill="#555"/>
+        <!-- exhaust -->
+        <circle cx="4" cy="1" r="3" fill="rgba(255,255,255,0.2)" class="smoke1"/>
+        <circle cx="8" cy="-5" r="4" fill="rgba(255,255,255,0.12)"/>
+      </svg>
+    </div>
+
+    <!-- Friends -->
+    <div id="friends-layer"></div>
+
+    <!-- Station dots & signs (rendered by JS) -->
+    <div id="station-layer"></div>
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="info-row" id="stop-cards"></div>
+
+  <!-- RANKING -->
+  <div class="ranking-section">
+    <div class="ranking-header">
+      <div>#Ranking</div>
+      <div>User</div>
+      <div>hr. 📚</div>
+      <div>Goal 🎯</div>
+      <div>Status 🏅</div>
+    </div>
+    <div id="ranking-body"></div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="share-modal">
+  <div class="modal">
+    <h3>
+      🔗 Share Track
+      <button class="modal-close" onclick="closeShareModal()">✕</button>
+    </h3>
+    <div class="share-options">
+      <div class="share-option selected" id="opt-link" onclick="setShareType('link')">
+        <div class="share-option-icon">🔗</div>
+        <div>
+          <div class="share-option-title">Invite Link</div>
+          <div class="share-option-desc">ใครที่มีลิงก์นี้เข้าร่วม track ได้เลย</div>
+        </div>
+      </div>
+      <div class="share-option" id="opt-code" onclick="setShareType('code')">
+        <div class="share-option-icon">🔒</div>
+        <div>
+          <div class="share-option-title">Private Code</div>
+          <div class="share-option-desc">แชร์รหัส 6 หลักเฉพาะเพื่อนที่ไว้วางใจ</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="share-link-section" style="margin-top: 14px;">
+      <div class="share-link-box">
+        <span id="share-url">trackracing.app/join/NORTH-X7K2Q</span>
+        <button class="copy-btn" id="copy-btn" onclick="copyLink()">คัดลอก</button>
+      </div>
+    </div>
+
+    <div id="share-code-section" style="margin-top: 14px; display: none;">
+      <div style="text-align: center; color: var(--muted); font-size: 0.82rem; margin-bottom: 8px;">รหัสเข้าร่วม track ของคุณ</div>
+      <div style="text-align: center;">
+        <span style="font-family: 'Orbitron', monospace; font-size: 2rem; color: var(--gold); letter-spacing: 8px; font-weight: 700;">X7K2Q9</span>
+      </div>
+      <div class="or-divider">— หรือให้เพื่อนกรอก —</div>
+      <input class="code-input" placeholder="X X X X X X" maxlength="8">
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================
+// DATA
+// =====================
+const routes = [
+  {
+    id: 'north',
+    name: 'สายเหนือ — กรุงเทพ → เชียงใหม่',
+    sub: 'ระยะทาง ~750 กม.',
+    skyTop: '#1a2a4a', skyBot: '#3a6a4a',
+    mountains: true,
+    stops: [
+      { label: 'กรุงเทพฯ', pct: 3, icon: '🏙️' },
+      { label: 'อยุธยา', pct: 20, icon: '🏛️' },
+      { label: 'พิษณุโลก', pct: 44, icon: '🌅' },
+      { label: 'ลำปาง', pct: 69, icon: '⛰️' },
+      { label: 'เชียงใหม่', pct: 96, icon: '🌿' },
+    ],
+    cards: [
+      { icon: '🏛️', name: 'อยุธยา', desc: 'โบราณสถาน วิวยามเย็น' },
+      { icon: '🌅', name: 'พิษณุโลก', desc: 'ทุ่งนาเขียว แสงเช้า' },
+      { icon: '🌁', name: 'ลำปาง → เชียงใหม่', desc: 'หมอกเช้า เขาสลับซับซ้อน' },
+      { icon: '🌿', name: 'เชียงใหม่', desc: 'ดอย ธรรมชาติสมบูรณ์' },
+    ]
+  },
+  {
+    id: 'east',
+    name: 'สายอีสาน — โคราช → ขอนแก่น',
+    sub: 'ที่ราบสูง ทุ่งกว้าง',
+    skyTop: '#0d1b3e', skyBot: '#c8651a',
+    mountains: false,
+    stops: [
+      { label: 'โคราช', pct: 3, icon: '🏙️' },
+      { label: 'บุรีรัมย์', pct: 30, icon: '🌾' },
+      { label: 'สุรินทร์', pct: 55, icon: '🐘' },
+      { label: 'ขอนแก่น', pct: 96, icon: '🌅' },
+    ],
+    cards: [
+      { icon: '🌾', name: 'ทุ่งโคราช', desc: 'ไร่อ้อย เส้นขอบฟ้ายาว' },
+      { icon: '🌅', name: 'พระอาทิตย์ตก', desc: 'ท้องฟ้าสีทองบนที่ราบ' },
+      { icon: '🏕️', name: 'ชุมชนอีสาน', desc: 'วิถีชีวิตชนบท' },
+    ]
+  },
+  {
+    id: 'south',
+    name: 'สายใต้ — หัวหิน → ชุมพร',
+    sub: 'ทะเล ป่ามะพร้าว ไร่สับปะรด',
+    skyTop: '#0a1a3a', skyBot: '#2a9aba',
+    mountains: false,
+    stops: [
+      { label: 'หัวหิน', pct: 3, icon: '🌊' },
+      { label: 'ประจวบฯ', pct: 38, icon: '🍍' },
+      { label: 'บางสะพาน', pct: 67, icon: '🥥' },
+      { label: 'ชุมพร', pct: 96, icon: '🌴' },
+    ],
+    cards: [
+      { icon: '🌊', name: 'หัวหิน', desc: 'ทะเลอ่าวไทย ชายหาด' },
+      { icon: '🍍', name: 'ประจวบฯ', desc: 'ไร่สับปะรดยาวเหยียด' },
+      { icon: '🥥', name: 'บางสะพาน', desc: 'สวนมะพร้าว ทะเลมรกต' },
+    ]
+  },
+  {
+    id: 'maeklong',
+    name: 'สายแม่กลอง — สมุทรสาคร → สมุทรสงคราม',
+    sub: 'รถไฟลอดตลาด',
+    skyTop: '#2a1a0a', skyBot: '#aa6a2a',
+    mountains: false,
+    stops: [
+      { label: 'สมุทรสาคร', pct: 3, icon: '🚢' },
+      { label: 'ตลาดร่มหุบ', pct: 50, icon: '🛒' },
+      { label: 'แม่กลอง', pct: 96, icon: '🌅' },
+    ],
+    cards: [
+      { icon: '🛒', name: 'ตลาดร่มหุบ', desc: 'ร้านค้าบนทางรถไฟ!' },
+      { icon: '🚢', name: 'สมุทรสาคร', desc: 'ท่าเรือ ชุมชนชายฝั่ง' },
+      { icon: '🌊', name: 'สมุทรสงคราม', desc: 'ตลาดน้ำอัมพวา' },
+    ]
+  }
+];
+
+// Simulated friends data
+const friends = [
+  { name: 'น้องมิ้นท์', emoji: '🐱', active: true,  pct: 0.28, hrs: 2.5, goalPct: 42 },
+  { name: 'พี่โบว์',   emoji: '🐻', active: true,  pct: 0.55, hrs: 3.1, goalPct: 62 },
+  { name: 'นายอาร์ม',  emoji: '🦊', active: false, pct: 0.70, hrs: 4.8, goalPct: 96 },
+  { name: 'คุณเนย',   emoji: '🐼', active: false, pct: 0.12, hrs: 0.8, goalPct: 16 },
+  { name: 'ฉัน (You)', emoji: '🌟', active: false, pct: 0.05, hrs: 0.0, goalPct: 0, isMe: true },
+];
+
+// State
+let currentRoute = 0;
+let sessionActive = false;
+let sessionSeconds = 0;
+let timerInterval = null;
+let trainPct = 0.04; // 0.0 - 1.0
+let shareType = 'link';
+
+// =====================
+// CLOCK
+// =====================
+function updateClock() {
+  const now = new Date();
+  const d = now.toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric' });
+  const t = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('date-display').textContent = d;
+  document.getElementById('time-display').textContent = t;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// =====================
+// ROUTE SELECTION
+// =====================
+function selectRoute(idx) {
+  currentRoute = idx;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  const r = routes[idx];
+  document.getElementById('route-title-text').innerHTML =
+    `${r.name} <span>${r.sub}</span>`;
+  renderScene(idx);
+  renderStops(idx);
+  renderCards(idx);
+  renderRanking();
+}
+
+// =====================
+// CANVAS SCENE
+// =====================
+function renderScene(idx) {
+  const r = routes[idx];
+  const c = document.getElementById('scene');
+  const container = document.getElementById('scene-container');
+  c.width = container.offsetWidth || 900;
+  c.height = container.offsetHeight || 280;
+  const W = c.width, H = c.height;
+  const ctx = c.getContext('2d');
+
+  // Sky gradient
+  const sky = ctx.createLinearGradient(0, 0, 0, H * 0.75);
+  sky.addColorStop(0, r.skyTop);
+  sky.addColorStop(1, r.skyBot);
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  if (r.mountains) {
+    drawMountains(ctx, W, H);
+    drawMoon(ctx, W);
+  } else if (r.id === 'south') {
+    drawSea(ctx, W, H);
+    drawCoconutTrees(ctx, W, H);
+  } else if (r.id === 'east') {
+    drawSun(ctx, W, H);
+    drawFlat(ctx, W, H);
+  } else if (r.id === 'maeklong') {
+    drawMarket(ctx, W, H);
+  }
+
+  // Ground
+  const grd = ctx.createLinearGradient(0, H * 0.72, 0, H);
+  if (r.id === 'east') { grd.addColorStop(0, '#a0722a'); grd.addColorStop(1, '#6a4a1a'); }
+  else if (r.id === 'south') { grd.addColorStop(0, '#1a4a1a'); grd.addColorStop(1, '#0e2e0e'); }
+  else if (r.id === 'maeklong') { grd.addColorStop(0, '#2a1a0a'); grd.addColorStop(1, '#1a0e05'); }
+  else { grd.addColorStop(0, '#2a5a2a'); grd.addColorStop(1, '#1a3a1a'); }
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, H * 0.72, W, H);
+
+  // Rails
+  const railY = H * 0.795;
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(0, railY); ctx.lineTo(W, railY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, railY + 7); ctx.lineTo(W, railY + 7); ctx.stroke();
+
+  // Sleepers
+  ctx.strokeStyle = '#5a4a3a';
+  ctx.lineWidth = 4;
+  for (let x = 30; x < W; x += 60) {
+    ctx.beginPath(); ctx.moveTo(x, railY - 4); ctx.lineTo(x, railY + 11); ctx.stroke();
+  }
+}
+
+function drawMountains(ctx, W, H) {
+  // Stars
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  for (let i = 0; i < 30; i++) {
+    ctx.beginPath();
+    ctx.arc(Math.random()*W, Math.random()*(H*0.4), Math.random()*1.3, 0, Math.PI*2);
+    ctx.fill();
+  }
+  // Far mountains
+  ctx.fillStyle = '#1a3a2a';
+  ctx.beginPath();
+  ctx.moveTo(0, H*0.7);
+  for (let i = 0; i <= 10; i++) {
+    const x = (W/10)*i;
+    const y = (i%2 === 0) ? H*0.35 : H*0.6;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H*0.7); ctx.fill();
+  // Near mountains
+  ctx.fillStyle = '#2a5a2a';
+  ctx.beginPath();
+  ctx.moveTo(0, H*0.75);
+  for (let i = 0; i <= 14; i++) {
+    const x = (W/14)*i;
+    const y = (i%2 === 0) ? H*0.42 : H*0.65;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H*0.75); ctx.fill();
+  // Mist
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.beginPath(); ctx.ellipse(W*0.3, H*0.55, W*0.25, 20, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(W*0.7, H*0.5, W*0.22, 16, 0, 0, Math.PI*2); ctx.fill();
+}
+
+function drawMoon(ctx, W) {
+  ctx.fillStyle = 'rgba(245,240,160,0.12)';
+  ctx.beginPath(); ctx.arc(W*0.88, 45, 28, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#1a2a4a';
+  ctx.beginPath(); ctx.arc(W*0.88 - 7, 40, 28, 0, Math.PI*2); ctx.fill();
+}
+
+function drawSun(ctx, W, H) {
+  const sx = W*0.82, sy = H*0.65;
+  const grd = ctx.createRadialGradient(sx, sy, 5, sx, sy, 120);
+  grd.addColorStop(0, 'rgba(255,200,60,0.3)');
+  grd.addColorStop(1, 'rgba(255,120,0,0)');
+  ctx.fillStyle = grd;
+  ctx.beginPath(); ctx.arc(sx, sy, 120, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,160,0.95)';
+  ctx.beginPath(); ctx.arc(sx, sy, 22, 0, Math.PI*2); ctx.fill();
+  // Trees silhouette
+  ctx.fillStyle = 'rgba(30,15,0,0.7)';
+  for (let x = 200; x < W*0.7; x += 65) {
+    ctx.beginPath();
+    ctx.arc(x, H*0.65, 14, 0, Math.PI*2); ctx.fill();
+    ctx.fillRect(x-3, H*0.65, 6, 25);
+  }
+}
+
+function drawFlat(ctx, W, H) {
+  // power line poles
+  ctx.strokeStyle = 'rgba(100,100,100,0.5)'; ctx.lineWidth = 2;
+  for (let x = 80; x < W; x += 160) {
+    ctx.beginPath(); ctx.moveTo(x, H*0.62); ctx.lineTo(x, H*0.78); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, H*0.63); ctx.lineTo(W, H*0.63); ctx.stroke();
+  }
+}
+
+function drawSea(ctx, W, H) {
+  const seaGrd = ctx.createLinearGradient(0, H*0.55, 0, H*0.74);
+  seaGrd.addColorStop(0, '#1a7aaa');
+  seaGrd.addColorStop(1, '#0a4a6a');
+  ctx.fillStyle = seaGrd;
+  ctx.fillRect(0, H*0.55, W, H*0.2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 90) {
+    ctx.beginPath(); ctx.moveTo(x, H*0.6); ctx.lineTo(x+50, H*0.6); ctx.stroke();
+  }
+}
+
+function drawCoconutTrees(ctx, W, H) {
+  const treeXs = [0.09, 0.2, 0.75, 0.88];
+  treeXs.forEach(px => {
+    const tx = W*px, ty = H*0.73;
+    ctx.strokeStyle = '#5a3a1a'; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.quadraticCurveTo(tx+10, ty-40, tx+5, ty-70); ctx.stroke();
+    ctx.strokeStyle = '#2a6a1a'; ctx.lineWidth = 7;
+    for (let a = -60; a <= 60; a += 30) {
+      const rad = (a * Math.PI) / 180;
+      ctx.beginPath();
+      ctx.moveTo(tx+5, ty-70);
+      ctx.lineTo(tx + 5 + Math.sin(rad)*36, ty - 70 + Math.cos(rad)*(-12));
+      ctx.stroke();
+    }
+  });
+}
+
+function drawMarket(ctx, W, H) {
+  // Buildings both sides
+  const colors = ['#5a3a1a','#6a4a2a','#7a5a3a','#4a2a0a','#8a6a4a'];
+  for (let x = 0; x < W; x += 55) {
+    const h = 70 + Math.random()*30;
+    ctx.fillStyle = colors[Math.floor(Math.random()*colors.length)];
+    ctx.fillRect(x, H*0.55 - h, 52, h + H*0.15);
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(x, H*0.55 - h, 52, 5);
+    // windows
+    ctx.fillStyle = 'rgba(245,217,126,0.7)';
+    for (let wy = H*0.55-h+12; wy < H*0.55-5; wy += 18) {
+      for (let wx = x+6; wx < x+46; wx += 16) {
+        ctx.fillRect(wx, wy, 9, 8);
+      }
+    }
+  }
+  // Market stall colors
+  const stallColors = ['#e74c3c','#27ae60','#f39c12','#9b59b6','#3498db'];
+  for (let x = 0; x < W; x += 32) {
+    ctx.fillStyle = stallColors[Math.floor(x/32) % stallColors.length];
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath();
+    ctx.roundRect(x, H*0.71, 28, 16, 3);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+// =====================
+// STATION SIGNS
+// =====================
+function renderStops(idx) {
+  const r = routes[idx];
+  const container = document.getElementById('scene-container');
+  const layer = document.getElementById('station-layer');
+  layer.innerHTML = '';
+
+  const W = container.offsetWidth || 900;
+  const H = container.offsetHeight || 280;
+  const railY = H * 0.795;
+
+  r.stops.forEach(s => {
+    const x = (s.pct / 100) * W;
+
+    // Dashed line
+    const line = document.createElement('div');
+    line.style.cssText = `
+      position: absolute;
+      left: ${x}px;
+      bottom: ${H - railY + 5}px;
+      width: 1.5px;
+      height: 52px;
+      background: repeating-linear-gradient(to top, #f5d97e 0, #f5d97e 4px, transparent 4px, transparent 8px);
+      transform: translateX(-50%);
+    `;
+    layer.appendChild(line);
+
+    // Sign
+    const sign = document.createElement('div');
+    sign.className = 'road-sign';
+    sign.style.cssText = `
+      position: absolute;
+      left: ${x}px;
+      bottom: ${H - railY + 56}px;
+      transform: translateX(-50%);
+    `;
+    sign.innerHTML = `${s.icon} ${s.label}`;
+    layer.appendChild(sign);
+
+    // Dot on rail
+    const dot = document.createElement('div');
+    dot.className = 'track-dot';
+    dot.style.cssText = `
+      position: absolute;
+      left: ${x}px;
+      bottom: ${H - railY - 10}px;
+      transform: translateX(-50%);
+    `;
+    layer.appendChild(dot);
+  });
+}
+
+// =====================
+// FRIENDS
+// =====================
+function renderFriends() {
+  const container = document.getElementById('scene-container');
+  const layer = document.getElementById('friends-layer');
+  layer.innerHTML = '';
+  const W = container.offsetWidth || 900;
+  const H = container.offsetHeight || 280;
+  const railY = H * 0.795;
+
+  friends.forEach(f => {
+    if (f.isMe) return;
+    const x = f.pct * W;
+    const wrap = document.createElement('div');
+    wrap.style.cssText = `
+      position: absolute;
+      left: ${x}px;
+      bottom: ${H - railY + 6}px;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    `;
+    const pip = document.createElement('div');
+    pip.className = 'friend-pip' + (f.active ? '' : ' idle');
+    pip.textContent = f.emoji;
+    pip.title = f.name;
+    pip.style.animationDelay = `${Math.random()*1.5}s`;
+
+    const nameTag = document.createElement('div');
+    nameTag.style.cssText = `
+      font-size: 9px; color: rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.5);
+      padding: 1px 5px; border-radius: 4px;
+      white-space: nowrap;
+    `;
+    nameTag.textContent = f.name;
+
+    wrap.appendChild(pip);
+    wrap.appendChild(nameTag);
+    layer.appendChild(wrap);
+  });
+}
+
+// =====================
+// CARDS
+// =====================
+function renderCards(idx) {
+  const r = routes[idx];
+  const container = document.getElementById('stop-cards');
+  container.innerHTML = r.cards.map(c => `
+    <div class="info-card">
+      <div class="ic">${c.icon}</div>
+      <div class="ic-name">${c.name}</div>
+      <div class="ic-desc">${c.desc}</div>
+    </div>
+  `).join('');
+}
+
+// =====================
+// RANKING
+// =====================
+function renderRanking() {
+  // Merge friends + me
+  const allUsers = [...friends].sort((a, b) => b.hrs - a.hrs);
+  allUsers.forEach((u, i) => u._rank = i + 1);
+
+  const medals = ['🥇', '🥈', '🥉'];
+  const body = document.getElementById('ranking-body');
+  body.innerHTML = allUsers.map((u, i) => {
+    const rankClass = i < 3 ? `rank-${i+1}` : '';
+    const statusClass = u.active ? 'active' : 'idle';
+    const statusLabel = u.active ? '🟢 กำลังอ่าน' : '💤 ออฟไลน์';
+    const hrs = u.hrs.toFixed(1);
+    return `
+      <div class="ranking-row">
+        <div class="rank-num ${rankClass}">${medals[i] || '#' + (i+1)}</div>
+        <div class="user-cell">
+          <div class="avatar ${u.active ? 'online' : ''} ${u.isMe ? 'me' : ''} ${u.active ? 'avatar-bounce' : ''}" style="background:rgba(255,255,255,0.07)">
+            ${u.emoji}
+            <div class="status-dot ${u.active ? 'active' : 'idle'}"></div>
+          </div>
+          <span class="user-name ${u.isMe ? 'me' : ''}">${u.name}</span>
+        </div>
+        <div class="hrs-cell">${hrs} hr</div>
+        <div class="goal-bar">
+          <div class="goal-track"><div class="goal-fill" style="width:${u.goalPct}%"></div></div>
+          <span class="goal-pct">${u.goalPct}%</span>
+        </div>
+        <div><span class="status-badge ${statusClass}">${statusLabel}</span></div>
+      </div>
+    `;
+  }).join('');
+}
+
+// =====================
+// TRAIN + SESSION
+// =====================
+function toggleSession() {
+  const btn = document.getElementById('join-btn');
+  const scene = document.getElementById('scene-container');
+  if (!sessionActive) {
+    sessionActive = true;
+    btn.textContent = '⏹ stop';
+    btn.classList.add('running');
+    scene.classList.add('active-session');
+    timerInterval = setInterval(() => {
+      sessionSeconds++;
+      updateTimer();
+      // Move train
+      trainPct = Math.min(0.95, trainPct + 0.00015);
+      updateTrainPosition();
+      // Update my ranking entry
+      const me = friends.find(f => f.isMe);
+      me.hrs = sessionSeconds / 3600;
+      me.goalPct = Math.min(100, Math.round((me.hrs / 5) * 100));
+      me.active = true;
+      if (sessionSeconds % 30 === 0) renderRanking();
+    }, 1000);
+  } else {
+    sessionActive = false;
+    btn.textContent = '▶ join track';
+    btn.classList.remove('running');
+    scene.classList.remove('active-session');
+    clearInterval(timerInterval);
+    friends.find(f => f.isMe).active = false;
+    renderRanking();
+  }
+}
+
+function updateTimer() {
+  const h = Math.floor(sessionSeconds / 3600);
+  const m = Math.floor((sessionSeconds % 3600) / 60);
+  const s = sessionSeconds % 60;
+  document.getElementById('timer-display').textContent =
+    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function updateTrainPosition() {
+  const container = document.getElementById('scene-container');
+  const W = container.offsetWidth || 900;
+  const xPx = trainPct * W;
+  document.getElementById('train-wrap').style.left = xPx + 'px';
+}
+
+// =====================
+// SHARE MODAL
+// =====================
+function openShareModal() {
+  document.getElementById('share-modal').classList.add('show');
+}
+function closeShareModal() {
+  document.getElementById('share-modal').classList.remove('show');
+}
+function setShareType(type) {
+  shareType = type;
+  document.getElementById('opt-link').classList.toggle('selected', type === 'link');
+  document.getElementById('opt-code').classList.toggle('selected', type === 'code');
+  document.getElementById('share-link-section').style.display = type === 'link' ? 'block' : 'none';
+  document.getElementById('share-code-section').style.display = type === 'code' ? 'block' : 'none';
+}
+function copyLink() {
+  const btn = document.getElementById('copy-btn');
+  navigator.clipboard?.writeText('https://trackracing.app/join/NORTH-X7K2Q').catch(()=>{});
+  btn.textContent = '✓ คัดลอกแล้ว';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = 'คัดลอก'; btn.classList.remove('copied'); }, 2000);
+}
+document.getElementById('share-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeShareModal();
+});
+
+// =====================
+// INIT
+// =====================
+window.addEventListener('load', () => {
+  selectRoute(0);
+  renderFriends();
+  renderRanking();
+});
+
+window.addEventListener('resize', () => {
+  selectRoute(currentRoute);
+  renderFriends();
+  updateTrainPosition();
+});
+
+// Simulate friends moving occasionally
+setInterval(() => {
+  friends.forEach(f => {
+    if (f.active && !f.isMe) {
+      f.pct = Math.min(0.95, f.pct + 0.001 + Math.random()*0.002);
+    }
+  });
+  renderFriends();
+}, 3000);
+</script>
+</body>
+</html>
