@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trackracing 🚂</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1c2333;--border:rgba(255,255,255,0.08);
+  --gold:#f5d97e;--green:#22c55e;--red:#ef4444;--blue:#60a5fa;--text:#e8eaf6;--muted:#6b7a99;
+  --sidebar:200px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── LOGIN ─────────────────────────────── */
+#login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,#1a2a4a,#0d1117 60%);}
+.login-track{position:absolute;bottom:90px;left:0;right:0;height:2px;background:rgba(255,255,255,0.05);}
+.login-rails{position:absolute;bottom:85px;left:0;right:0;height:2px;background:rgba(255,255,255,0.04);}
+.login-train{position:absolute;bottom:95px;animation:ltrain 13s linear infinite;}
+@keyframes ltrain{from{left:-130px}to{left:calc(100% + 60px)}}
+.login-card{position:relative;z-index:10;background:rgba(22,27,34,0.96);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:40px 36px;width:90%;max-width:400px;box-shadow:0 40px 100px rgba(0,0,0,0.6);backdrop-filter:blur(20px);}
+.login-logo{text-align:center;margin-bottom:6px;font-family:'Orbitron',monospace;font-size:1.85rem;font-weight:900;background:linear-gradient(135deg,#ff6b35,#f5d97e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.login-tagline{text-align:center;color:var(--muted);font-size:0.85rem;margin-bottom:28px;line-height:1.5;}
+.btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:white;color:#1a1a1a;border:none;padding:11px 18px;border-radius:12px;font-size:0.92rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Sarabun',sans-serif;}
+.btn-google:hover{background:#f0f0f0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.2);}
+.g-icon{width:20px;height:20px;background:conic-gradient(from 90deg,#ea4335 25%,#fbbc05 25% 50%,#34a853 50% 75%,#4285f4 75%);border-radius:50%;flex-shrink:0;}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--muted);font-size:0.78rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.inp-group{margin-bottom:10px;}
+.inp-group label{display:block;font-size:0.78rem;color:var(--muted);margin-bottom:4px;}
+.inp{width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:0.92rem;outline:none;transition:border-color 0.2s;}
+.inp:focus{border-color:var(--gold);}
+.btn-primary{width:100%;background:linear-gradient(135deg,#f5d97e,#ff9a3c);color:#1a1200;border:none;padding:11px;border-radius:11px;font-family:'Sarabun',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:4px;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(245,217,126,0.3);}
+.auth-toggle{text-align:center;margin-top:12px;font-size:0.8rem;color:var(--muted);}
+.auth-toggle a{color:var(--gold);cursor:pointer;}
+
+/* ── APP SHELL ──────────────────────────── */
+#app-page{display:none;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar);background:rgba(10,13,20,0.98);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:16px 10px;gap:4px;
+  position:fixed;top:0;left:0;bottom:0;z-index:200;
+}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:6px 8px 18px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+.sidebar-brand-logo{font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;background:linear-gradient(135deg,#ff6b35,#f5d97e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:all 0.18s;border:1.5px solid transparent;color:var(--muted);text-decoration:none;font-size:0.88rem;font-weight:600;white-space:nowrap;}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.nav-item.active{background:rgba(245,217,126,0.1);border-color:rgba(245,217,126,0.28);color:var(--gold);}
+.nav-item-icon{font-size:1.1rem;flex-shrink:0;width:22px;text-align:center;}
+.nav-spacer{flex:1;}
+.sidebar-user{display:flex;align-items:center;gap:9px;padding:10px 10px;border-radius:12px;cursor:pointer;transition:background 0.2s;border-top:1px solid var(--border);margin-top:4px;padding-top:14px;}
+.sidebar-user:hover{background:rgba(255,255,255,0.05);}
+.sidebar-user-av{width:32px;height:32px;border-radius:50%;background:rgba(245,217,126,0.1);border:2px solid rgba(245,217,126,0.3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.sidebar-user-name{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sidebar-user-sub{font-size:0.7rem;color:var(--muted);}
+
+/* CONTENT */
+.app-content{margin-left:var(--sidebar);min-height:100vh;display:flex;flex-direction:column;}
+
+/* TOP HEADER */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;border-bottom:1px solid var(--border);background:rgba(13,17,23,0.96);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.page-title{font-size:1rem;font-weight:700;color:var(--text);}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.badge{background:rgba(245,217,126,0.1);border:1px solid rgba(245,217,126,0.22);color:var(--gold);padding:4px 11px;border-radius:18px;font-size:0.76rem;font-weight:700;font-family:'Orbitron',monospace;}
+
+/* PAGES */
+.page{display:none;flex:1;}
+.page.active{display:flex;flex-direction:column;}
+
+/* ── TRACK PAGE ─────────────────────────── */
+.route-tabs{display:flex;gap:7px;padding:14px 24px 0;flex-wrap:wrap;}
+.tab-btn{background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:var(--muted);padding:6px 16px;border-radius:28px;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:0.85rem;font-weight:600;transition:all 0.2s;}
+.tab-btn:hover{border-color:var(--gold);color:var(--gold);}
+.tab-btn.active{background:rgba(245,217,126,0.13);border-color:var(--gold);color:var(--gold);}
+
+.track-main{padding:14px 0 24px;}
+.info-bar{display:flex;align-items:center;gap:9px;padding:0 24px 12px;flex-wrap:wrap;}
+.route-ttl{font-size:1rem;font-weight:700;}
+.route-ttl span{font-size:0.78rem;font-weight:400;color:var(--muted);margin-left:4px;}
+.btn-join{background:linear-gradient(135deg,#f5d97e,#ff9a3c);color:#1a1200;border:none;padding:7px 18px;border-radius:22px;font-family:'Sarabun',sans-serif;font-weight:700;font-size:0.86rem;cursor:pointer;transition:all 0.2s;}
+.btn-join:hover{transform:translateY(-1px);}
+.btn-join.running{background:linear-gradient(135deg,#ef4444,#dc2626);color:white;}
+.timer{font-family:'Orbitron',monospace;font-size:0.92rem;color:var(--gold);font-weight:700;background:rgba(245,217,126,0.09);padding:5px 12px;border-radius:16px;border:1px solid rgba(245,217,126,0.2);letter-spacing:2px;min-width:88px;text-align:center;}
+.btn-sm{padding:6px 13px;border-radius:20px;font-family:'Sarabun',sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;border:1.5px solid;}
+.btn-goal{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.3);color:#4ade80;}
+.btn-goal:hover{background:rgba(34,197,94,0.16);}
+.btn-shr{background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.3);color:var(--blue);}
+.btn-shr:hover{background:rgba(96,165,250,0.16);}
+
+/* SCENE — full width, no side padding */
+.scene-outer{padding:0;position:relative;}
+.scene-wrap{position:relative;background:#0d2040;height:280px;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.scene-wrap.live{box-shadow:inset 0 0 0 2px rgba(245,217,126,0.3);}
+#scene{position:absolute;top:0;left:0;width:100%;height:100%;}
+#train-wrap{position:absolute;transition:left 2.5s cubic-bezier(0.4,0,0.2,1);}
+
+/* Train avatar */
+.train-avatar{position:absolute;top:-22px;left:50%;transform:translateX(-50%);width:26px;height:26px;border-radius:50%;border:2px solid var(--gold);background:#1a2035;display:flex;align-items:center;justify-content:center;font-size:0.85rem;box-shadow:0 0 10px rgba(245,217,126,0.5);pointer-events:none;}
+.train-nametag{position:absolute;top:-40px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.78);border:1px solid rgba(245,217,126,0.22);border-radius:5px;padding:1px 7px;font-size:9px;color:rgba(255,255,255,0.87);white-space:nowrap;pointer-events:none;font-family:'Sarabun',sans-serif;}
+
+/* Station signs */
+.stn-sign{position:absolute;background:rgba(0,0,0,0.76);border-radius:5px;padding:2px 9px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.88);white-space:nowrap;transform:translateX(-50%);pointer-events:none;border:1px solid rgba(255,255,255,0.09);}
+.stn-line{position:absolute;width:1.5px;background:repeating-linear-gradient(to top,rgba(245,217,126,0.5) 0,rgba(245,217,126,0.5) 4px,transparent 4px,transparent 8px);transform:translateX(-50%);pointer-events:none;}
+.track-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid rgba(5,5,5,0.8);transform:translateX(-50%);pointer-events:none;z-index:2;}
+.friend-pip{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:0.88rem;background:#1a2035;animation:fbob 2s ease-in-out infinite;}
+.friend-pip.idle{border-color:#94a3b8;animation:none;opacity:0.52;}
+@keyframes fbob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.05)}}
+
+/* Below scene */
+.below-scene{padding:0 24px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px;}
+.card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:11px;padding:10px 12px;transition:border-color 0.2s;}
+.card:hover{border-color:rgba(245,217,126,0.22);}
+.card .ci{font-size:1.1rem;}.card .cn{font-size:0.8rem;font-weight:700;color:var(--gold);margin:3px 0 1px;}.card .cd{font-size:0.71rem;color:var(--muted);line-height:1.4;}
+
+/* Ranking */
+.rank-sec{margin-top:16px;}
+.rank-hdr{display:grid;grid-template-columns:48px 1fr 80px 130px 105px;background:rgba(26,86,219,0.15);border:1px solid rgba(26,86,219,0.3);border-radius:10px 10px 0 0;padding:8px 12px;font-size:0.8rem;font-weight:700;color:#93c5fd;gap:8px;align-items:center;}
+.rank-row{display:grid;grid-template-columns:48px 1fr 80px 130px 105px;padding:8px 12px;border-bottom:1px solid var(--border);font-size:0.83rem;gap:8px;align-items:center;background:rgba(255,255,255,0.02);transition:background 0.18s;}
+.rank-row:hover{background:rgba(255,255,255,0.05);}
+.rank-row:last-child{border-radius:0 0 10px 10px;border-bottom:1px solid rgba(26,86,219,0.28);}
+.rn{font-family:'Orbitron',monospace;font-weight:700;font-size:0.88rem;}
+.r1{color:#fbbf24}.r2{color:#94a3b8}.r3{color:#cd7f32}
+.ucell{display:flex;align-items:center;gap:8px;}
+.av{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.88rem;border:2px solid transparent;position:relative;flex-shrink:0;background:rgba(255,255,255,0.07);}
+.av.on{border-color:var(--green)}.av.me{border-color:var(--gold);box-shadow:0 0 7px rgba(245,217,126,0.28);}
+.av.ab{animation:avb 1.8s ease-in-out infinite;}
+@keyframes avb{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.sdot{position:absolute;bottom:-2px;right:-2px;width:7px;height:7px;border-radius:50%;border:2px solid var(--bg);}
+.sdot.a{background:var(--green);animation:pd 2s infinite;}.sdot.i{background:#94a3b8;}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:0.4}}
+.uname{font-weight:600;font-size:0.84rem;}.uname.me{color:var(--gold);}
+.hcell{font-family:'Orbitron',monospace;font-size:0.78rem;color:var(--gold);font-weight:700;}
+.gbar{display:flex;align-items:center;gap:6px;}
+.gtrack{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+.gfill{height:100%;background:linear-gradient(90deg,#22c55e,#84cc16);border-radius:3px;transition:width 1s ease;}
+.gpct{font-size:0.7rem;color:var(--muted);min-width:27px;}
+.sbadge{font-size:0.7rem;padding:2px 7px;border-radius:10px;font-weight:600;display:inline-flex;align-items:center;gap:3px;}
+.sbadge.a{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.22);}
+.sbadge.i{background:rgba(148,163,184,0.07);color:#94a3b8;border:1px solid rgba(148,163,184,0.15);}
+
+/* ── SHARING BOX PAGE ───────────────────── */
+.page-wrap{padding:24px;max-width:820px;}
+.page-section-title{font-size:0.75rem;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+
+/* Compose box */
+.compose-box{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:24px;transition:border-color 0.2s;}
+.compose-box:focus-within{border-color:rgba(245,217,126,0.3);}
+.compose-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.compose-avatar{width:34px;height:34px;border-radius:50%;background:rgba(245,217,126,0.1);border:2px solid rgba(245,217,126,0.3);display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0;}
+.compose-meta{flex:1;}
+.compose-meta-name{font-size:0.85rem;font-weight:700;color:var(--gold);}
+.compose-meta-hint{font-size:0.72rem;color:var(--muted);}
+.compose-title{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);padding:6px 2px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:1rem;font-weight:700;outline:none;margin-bottom:10px;}
+.compose-title::placeholder{color:var(--muted);}
+.compose-title:focus{border-color:rgba(245,217,126,0.4);}
+.compose-body{width:100%;background:transparent;border:none;color:var(--text);font-family:'Sarabun',sans-serif;font-size:0.9rem;line-height:1.7;outline:none;resize:none;min-height:90px;}
+.compose-body::placeholder{color:var(--muted);}
+.compose-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.compose-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tag-chip{background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);color:var(--blue);padding:3px 10px;border-radius:20px;font-size:0.74rem;cursor:pointer;font-weight:600;transition:background 0.2s;}
+.tag-chip:hover,.tag-chip.sel{background:rgba(96,165,250,0.2);}
+.tag-chip.sel{border-color:var(--blue);}
+.compose-submit{background:linear-gradient(135deg,#f5d97e,#ff9a3c);color:#1a1200;border:none;padding:8px 22px;border-radius:22px;font-family:'Sarabun',sans-serif;font-size:0.86rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.compose-submit:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(245,217,126,0.25);}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
+.filter-btn{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.09);color:var(--muted);padding:5px 14px;border-radius:20px;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:0.8rem;font-weight:600;transition:all 0.2s;}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold);}
+.filter-btn.active{background:rgba(245,217,126,0.1);border-color:rgba(245,217,126,0.35);color:var(--gold);}
+.filter-search{flex:1;min-width:160px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:20px;padding:6px 14px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:0.82rem;outline:none;max-width:240px;}
+.filter-search:focus{border-color:rgba(245,217,126,0.3);}
+
+/* Note cards */
+.notes-feed{display:flex;flex-direction:column;gap:14px;}
+.note-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;transition:border-color 0.2s,transform 0.15s;}
+.note-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-1px);}
+.note-card.bookmarked{border-color:rgba(245,217,126,0.25);background:rgba(245,217,126,0.03);}
+.note-author{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.note-av{width:30px;height:30px;border-radius:50%;border:2px solid transparent;display:flex;align-items:center;justify-content:center;font-size:0.95rem;background:rgba(255,255,255,0.07);flex-shrink:0;}
+.note-av.me{border-color:var(--gold);}
+.note-author-name{font-size:0.84rem;font-weight:700;}
+.note-author-name.me{color:var(--gold);}
+.note-time{font-size:0.72rem;color:var(--muted);margin-left:auto;}
+.note-title{font-size:1rem;font-weight:700;margin-bottom:6px;line-height:1.4;}
+.note-body{font-size:0.86rem;color:rgba(232,234,246,0.78);line-height:1.7;margin-bottom:12px;white-space:pre-wrap;}
+.note-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.note-tag{background:rgba(96,165,250,0.09);border:1px solid rgba(96,165,250,0.2);color:var(--blue);padding:2px 9px;border-radius:14px;font-size:0.71rem;font-weight:600;}
+.note-actions{display:flex;align-items:center;gap:6px;}
+.note-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:8px;font-size:0.76rem;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all 0.18s;font-family:'Sarabun',sans-serif;font-weight:600;}
+.note-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+.note-btn.bm{color:var(--gold);border-color:rgba(245,217,126,0.25);background:rgba(245,217,126,0.06);}
+.note-btn.del{color:var(--red);border-color:rgba(239,68,68,0.25);}
+.note-btn.del:hover{background:rgba(239,68,68,0.1);}
+.note-btn.edit{color:var(--blue);border-color:rgba(96,165,250,0.25);}
+.note-btn.edit:hover{background:rgba(96,165,250,0.1);}
+
+/* Edit inline */
+.note-edit-area{width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(245,217,126,0.25);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:0.86rem;line-height:1.7;outline:none;resize:none;min-height:80px;margin-bottom:8px;}
+.note-edit-title{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(245,217,126,0.25);padding:4px 2px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:0.98rem;font-weight:700;outline:none;margin-bottom:8px;}
+.note-edit-actions{display:flex;gap:7px;}
+.btn-save{background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border:none;padding:6px 16px;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;}
+.btn-cancel-edit{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:0.8rem;cursor:pointer;}
+
+/* ── FIND PAGE ──────────────────────────── */
+.find-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.find-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all 0.2s;}
+.find-card:hover{border-color:rgba(245,217,126,0.3);transform:translateY(-2px);}
+.find-card-emoji{font-size:1.8rem;margin-bottom:8px;}
+.find-card-title{font-size:0.9rem;font-weight:700;margin-bottom:4px;}
+.find-card-desc{font-size:0.78rem;color:var(--muted);line-height:1.5;}
+.find-card-count{margin-top:10px;font-size:0.74rem;color:var(--green);font-weight:600;}
+.find-input-wrap{display:flex;gap:10px;margin-bottom:20px;}
+.find-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 16px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+.find-input:focus{border-color:var(--gold);}
+.btn-find{background:linear-gradient(135deg,#f5d97e,#ff9a3c);color:#1a1200;border:none;padding:11px 22px;border-radius:12px;font-family:'Sarabun',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;}
+
+/* ── CAFE PAGE ──────────────────────────── */
+.cafe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.cafe-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.2s;cursor:pointer;}
+.cafe-card:hover{border-color:rgba(245,217,126,0.25);transform:translateY(-2px);}
+.cafe-card-banner{height:80px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.cafe-card-body{padding:14px;}
+.cafe-card-title{font-size:0.9rem;font-weight:700;margin-bottom:4px;}
+.cafe-card-desc{font-size:0.76rem;color:var(--muted);line-height:1.5;margin-bottom:10px;}
+.cafe-card-footer{display:flex;align-items:center;justify-content:space-between;}
+.cafe-members{font-size:0.72rem;color:var(--green);font-weight:600;}
+.cafe-tag{font-size:0.68rem;background:rgba(255,255,255,0.06);border-radius:8px;padding:2px 8px;color:var(--muted);}
+
+/* ── STATS PAGE ─────────────────────────── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 16px;}
+.stat-card-val{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:900;color:var(--gold);margin-bottom:4px;}
+.stat-card-label{font-size:0.76rem;color:var(--muted);font-weight:600;}
+.stat-card-sub{font-size:0.7rem;color:var(--green);margin-top:3px;}
+.heatmap-row{display:flex;gap:3px;flex-wrap:wrap;margin-top:8px;}
+.hm-cell{width:14px;height:14px;border-radius:3px;background:rgba(255,255,255,0.05);}
+.hm-cell.l1{background:rgba(34,197,94,0.2);}
+.hm-cell.l2{background:rgba(34,197,94,0.45);}
+.hm-cell.l3{background:rgba(34,197,94,0.7);}
+.hm-cell.l4{background:rgba(34,197,94,0.95);}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.bar-label{font-size:0.76rem;color:var(--muted);width:60px;text-align:right;flex-shrink:0;}
+.bar-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,#ff6b35,#f5d97e);border-radius:4px;}
+.bar-val{font-size:0.74rem;font-family:'Orbitron',monospace;color:var(--gold);width:36px;}
+
+/* ── MODALS ─────────────────────────────── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:300;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.mo.show{opacity:1;pointer-events:all;}
+.md{background:#1a2035;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:22px;width:90%;max-width:400px;box-shadow:0 30px 80px rgba(0,0,0,0.6);transform:translateY(12px);transition:transform 0.2s;}
+.mo.show .md{transform:translateY(0);}
+.mh{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.mc{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;}
+.mc:hover{color:var(--text);}
+.gtabs{display:flex;gap:6px;margin-bottom:14px;}
+.gtab{flex:1;padding:7px;border-radius:9px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'Sarabun',sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.2s;text-align:center;font-weight:600;}
+.gtab.active{border-color:var(--green);color:#4ade80;background:rgba(34,197,94,0.09);}
+.gsec{display:none;}.gsec.show{display:block;}
+.ghgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+.ghbtn{padding:8px;border-radius:9px;border:1.5px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text);font-family:'Orbitron',monospace;font-size:0.86rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+.ghbtn:hover{border-color:var(--gold);color:var(--gold);}
+.ghbtn.sel{border-color:var(--gold);background:rgba(245,217,126,0.1);color:var(--gold);}
+.gcustom{display:flex;gap:8px;align-items:center;}
+.gcustom input{flex:1;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'Orbitron',monospace;font-size:0.92rem;outline:none;}
+.gcustom input:focus{border-color:var(--gold);}
+.gcustom span{color:var(--muted);font-size:0.82rem;}
+.cplist{display:flex;flex-direction:column;gap:6px;max-height:190px;overflow-y:auto;padding-right:3px;}
+.cpitem{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.2s;}
+.cpitem:hover{border-color:var(--gold);}
+.cpitem.sel{border-color:var(--green);background:rgba(34,197,94,0.07);}
+.cppct{margin-left:auto;font-size:0.72rem;color:var(--muted);font-family:'Orbitron',monospace;}
+.btn-confirm{width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border:none;padding:10px;border-radius:11px;font-family:'Sarabun',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:12px;}
+.btn-confirm:hover{transform:translateY(-1px);}
+.sopts{display:flex;flex-direction:column;gap:7px;}
+.sopt{display:flex;align-items:center;gap:10px;padding:11px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.2s;}
+.sopt:hover,.sopt.sel{border-color:var(--gold);background:rgba(245,217,126,0.06);}
+.sopt-icon{font-size:1.3rem;}
+.sopt-title{font-weight:700;font-size:0.84rem;}
+.sopt-desc{font-size:0.72rem;color:var(--muted);}
+.slink-box{background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-family:'Orbitron',monospace;font-size:0.74rem;color:var(--gold);margin-top:10px;word-break:break-all;display:flex;align-items:center;justify-content:space-between;gap:7px;}
+.copy-btn{background:rgba(245,217,126,0.1);border:1px solid rgba(245,217,126,0.22);color:var(--gold);padding:3px 9px;border-radius:7px;font-size:0.72rem;cursor:pointer;white-space:nowrap;transition:background 0.2s;}
+.copy-btn:hover{background:rgba(245,217,126,0.2);}
+.copy-btn.copied{color:var(--green);border-color:var(--green);}
+.code-big{text-align:center;font-family:'Orbitron',monospace;font-size:1.8rem;color:var(--gold);letter-spacing:8px;font-weight:700;padding:6px 0;}
+.or-div{text-align:center;color:var(--muted);font-size:0.76rem;margin:8px 0;}
+
+/* TOAST */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(16px);background:#1a2035;border:1px solid rgba(245,217,126,0.28);color:var(--gold);padding:8px 18px;border-radius:26px;font-size:0.84rem;font-weight:600;z-index:600;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* BOTTOM TAB mobile */
+.bottom-tab{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(10,13,20,0.98);border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,6px);}
+.btab-items{display:flex;justify-content:space-around;}
+.btab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;color:var(--muted);cursor:pointer;border:none;background:none;font-family:'Sarabun',sans-serif;transition:color 0.2s;}
+.btab-item.active{color:var(--gold);}
+.btab-icon{font-size:1.2rem;}.btab-label{font-size:0.58rem;font-weight:600;}
+
+@media(max-width:768px){
+  :root{--sidebar:0px;}
+  .sidebar{display:none;}
+  .app-content{margin-left:0;padding-bottom:68px;}
+  .bottom-tab{display:block;}
+  .rank-hdr,.rank-row{grid-template-columns:36px 1fr 60px 72px;font-size:0.72rem;padding:7px 8px;}
+  .rank-hdr>div:last-child,.rank-row>div:last-child{display:none;}
+  .page-wrap{padding:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══════════════════════════════════ -->
+<div id="login-page">
+  <div class="login-bg"></div>
+  <div class="login-track"></div><div class="login-rails"></div>
+  <div class="login-train">
+    <svg width="88" height="31" viewBox="0 0 88 31">
+      <rect x="0" y="3" width="55" height="21" rx="4" fill="#c0392b" opacity="0.6"/>
+      <rect x="4" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.4"/>
+      <rect x="16" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.4"/>
+      <rect x="28" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.4"/>
+      <rect x="55" y="5" width="20" height="19" rx="3" fill="#922b21" opacity="0.6"/>
+      <circle cx="13" cy="26" r="4" fill="#333" opacity="0.5"/>
+      <circle cx="44" cy="26" r="4" fill="#333" opacity="0.5"/>
+      <circle cx="67" cy="26" r="3.5" fill="#333" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="login-card">
+    <div class="login-logo">Tr🚂ckracing</div>
+    <div class="login-tagline">จับเวลาอ่านหนังสือกับเพื่อน<br>ไปด้วยกันบนเส้นทางรถไฟ 🌲</div>
+    <button class="btn-google" onclick="loginGoogle()"><div class="g-icon"></div>เข้าสู่ระบบด้วย Google</button>
+    <div class="divider">หรือ</div>
+    <div id="lform">
+      <div class="inp-group"><label>อีเมล</label><input class="inp" type="email" id="lemail" placeholder="you@example.com"></div>
+      <div class="inp-group"><label>รหัสผ่าน</label><input class="inp" type="password" id="lpw" placeholder="••••••••"></div>
+      <button class="btn-primary" onclick="loginEmail()">เข้าสู่ระบบ</button>
+    </div>
+    <div id="rform" style="display:none">
+      <div class="inp-group"><label>ชื่อที่แสดง</label><input class="inp" type="text" id="rname" placeholder="ชื่อของคุณ"></div>
+      <div class="inp-group"><label>อีเมล</label><input class="inp" type="email" id="remail" placeholder="you@example.com"></div>
+      <div class="inp-group"><label>รหัสผ่าน</label><input class="inp" type="password" id="rpw" placeholder="••••••••"></div>
+      <button class="btn-primary" onclick="register()">สมัครสมาชิก</button>
+    </div>
+    <div class="auth-toggle" id="atog">ยังไม่มีบัญชี? <a onclick="toggleAuth()">สมัครสมาชิก</a></div>
+  </div>
+</div>
+
+<!-- ═══ APP ══════════════════════════════════════ -->
+<div id="app-page">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-logo">Tr🚂ckracing</div>
+    </div>
+    <a class="nav-item active" id="nav-track" onclick="setNav('track')">
+      <span class="nav-item-icon">🚂</span>Track Racer
+    </a>
+    <a class="nav-item" id="nav-find" onclick="setNav('find')">
+      <span class="nav-item-icon">🧭</span>Find my way
+    </a>
+    <a class="nav-item" id="nav-share" onclick="setNav('share')">
+      <span class="nav-item-icon">📦</span>Sharing Box
+    </a>
+    <a class="nav-item" id="nav-cafe" onclick="setNav('cafe')">
+      <span class="nav-item-icon">☕</span>Cafe
+    </a>
+    <a class="nav-item" id="nav-stats" onclick="setNav('stats')">
+      <span class="nav-item-icon">📊</span>Stats
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="sidebar-user" onclick="logout()">
+      <div class="sidebar-user-av" id="nav-avatar">🌟</div>
+      <div>
+        <div class="sidebar-user-name" id="nav-uname">You</div>
+        <div class="sidebar-user-sub">ออกจากระบบ ↩</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BOTTOM TAB (mobile) -->
+  <nav class="bottom-tab">
+    <div class="btab-items">
+      <button class="btab-item active" id="btab-track" onclick="setNav('track')"><span class="btab-icon">🚂</span><span class="btab-label">Track</span></button>
+      <button class="btab-item" id="btab-find" onclick="setNav('find')"><span class="btab-icon">🧭</span><span class="btab-label">Find</span></button>
+      <button class="btab-item" id="btab-share" onclick="setNav('share')"><span class="btab-icon">📦</span><span class="btab-label">Share</span></button>
+      <button class="btab-item" id="btab-cafe" onclick="setNav('cafe')"><span class="btab-icon">☕</span><span class="btab-label">Cafe</span></button>
+      <button class="btab-item" id="btab-stats" onclick="setNav('stats')"><span class="btab-icon">📊</span><span class="btab-label">Stats</span></button>
+    </div>
+  </nav>
+
+  <div class="app-content">
+
+    <!-- ── HEADER ── -->
+    <div class="app-header">
+      <div class="page-title" id="page-title">🚂 Track Racer</div>
+      <div class="hdr-right">
+        <div class="badge" id="date-d">--</div>
+        <div class="badge" id="time-d">--:--</div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: TRACK ══════════════════════════ -->
+    <div class="page active" id="page-track">
+      <div class="route-tabs">
+        <button class="tab-btn active" onclick="selRoute(0)">🌲 สายเหนือ</button>
+        <button class="tab-btn" onclick="selRoute(1)">🌾 สายอีสาน</button>
+        <button class="tab-btn" onclick="selRoute(2)">🌊 สายใต้</button>
+        <button class="tab-btn" onclick="selRoute(3)">🛒 สายแม่กลอง</button>
+      </div>
+      <div class="track-main">
+        <div class="info-bar">
+          <div class="route-ttl" id="rttl">สายเหนือ — กรุงเทพ → เชียงใหม่ <span>~750 กม.</span></div>
+          <button class="btn-join" id="join-btn" onclick="toggleSession()">▶ join track</button>
+          <div class="timer" id="timer">00:00:00</div>
+          <button class="btn-sm btn-goal" onclick="openGoal()">🎯 <span id="glabel">ตั้ง Goal</span></button>
+          <button class="btn-sm btn-shr" onclick="openShare()">🔗 share track</button>
+        </div>
+
+        <!-- SCENE — full width -->
+        <div class="scene-outer">
+          <div class="scene-wrap" id="sw">
+            <canvas id="scene"></canvas>
+            <div id="train-wrap">
+              <div class="train-nametag" id="train-nametag">You</div>
+              <div class="train-avatar" id="train-avatar">🌟</div>
+              <svg width="76" height="32" viewBox="0 0 76 32">
+                <rect x="0" y="3" width="54" height="21" rx="4" fill="#c0392b"/>
+                <rect x="4" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.9"/>
+                <rect x="16" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.9"/>
+                <rect x="28" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.9"/>
+                <rect x="54" y="5" width="18" height="18" rx="3" fill="#922b21"/>
+                <rect x="56" y="8" width="7" height="6" rx="1" fill="#aee6f7" opacity="0.7"/>
+                <rect x="64" y="8" width="5" height="6" rx="1" fill="#aee6f7" opacity="0.7"/>
+                <circle cx="11" cy="26" r="5" fill="#222"/><circle cx="11" cy="26" r="2.5" fill="#555"/>
+                <circle cx="42" cy="26" r="5" fill="#222"/><circle cx="42" cy="26" r="2.5" fill="#555"/>
+                <circle cx="64" cy="26" r="4" fill="#222"/><circle cx="64" cy="26" r="2" fill="#555"/>
+                <ellipse cx="2" cy="1" rx="4" ry="2.5" fill="rgba(255,255,255,0.16)"/>
+              </svg>
+            </div>
+            <div id="fl"></div><div id="sl"></div>
+          </div>
+        </div>
+
+        <div class="below-scene">
+          <div class="cards" id="cards"></div>
+          <div class="rank-sec">
+            <div class="rank-hdr"><div>#</div><div>User</div><div>hr.📚</div><div>Goal🎯</div><div>Status</div></div>
+            <div id="rank-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: FIND ════════════════════════════ -->
+    <div class="page" id="page-find">
+      <div class="page-wrap">
+        <div class="page-section-title" style="margin-bottom:16px">ค้นหา Track หรือเพื่อน</div>
+        <div class="find-input-wrap">
+          <input class="find-input" placeholder="ชื่อ track, รหัส, หรือชื่อเพื่อน…" id="find-q">
+          <button class="btn-find" onclick="doFind()">ค้นหา 🧭</button>
+        </div>
+        <div class="page-section-title">Track ยอดนิยม</div>
+        <div class="find-grid" id="find-grid"></div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: SHARING BOX ═════════════════════ -->
+    <div class="page" id="page-share">
+      <div class="page-wrap">
+        <!-- Compose -->
+        <div class="page-section-title">แชร์ความรู้ของคุณ ✍️</div>
+        <div class="compose-box">
+          <div class="compose-header">
+            <div class="compose-avatar" id="compose-av">🌟</div>
+            <div class="compose-meta">
+              <div class="compose-meta-name" id="compose-uname">You</div>
+              <div class="compose-meta-hint">เขียน note, blog, หรือ tip อะไรก็ได้ที่อยากแชร์</div>
+            </div>
+          </div>
+          <input class="compose-title" id="compose-title" placeholder="หัวข้อ / ชื่อ blog…" maxlength="80">
+          <textarea class="compose-body" id="compose-body" placeholder="เนื้อหา… เขียนได้เลย ไม่ต้องเกริ่น 🚂" rows="4"></textarea>
+          <div class="compose-footer">
+            <div class="compose-tags" id="compose-tags">
+              <span class="tag-chip" onclick="toggleTag(this,'📚 อ่านหนังสือ')">📚 อ่านหนังสือ</span>
+              <span class="tag-chip" onclick="toggleTag(this,'💡 ทริค')">💡 ทริค</span>
+              <span class="tag-chip" onclick="toggleTag(this,'🧠 สรุป')">🧠 สรุป</span>
+              <span class="tag-chip" onclick="toggleTag(this,'🎯 เป้าหมาย')">🎯 เป้าหมาย</span>
+              <span class="tag-chip" onclick="toggleTag(this,'☕ ไลฟ์สไตล์')">☕ ไลฟ์สไตล์</span>
+            </div>
+            <button class="compose-submit" onclick="submitNote()">โพสต์ →</button>
+          </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter-bar">
+          <button class="filter-btn active" onclick="filterNotes('all',this)">ทั้งหมด</button>
+          <button class="filter-btn" onclick="filterNotes('mine',this)">ของฉัน</button>
+          <button class="filter-btn" onclick="filterNotes('bookmarked',this)">🔖 Bookmark</button>
+          <input class="filter-search" id="note-search" placeholder="🔍 ค้นหา…" oninput="renderNotes()">
+        </div>
+
+        <div class="notes-feed" id="notes-feed"></div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: CAFE ════════════════════════════ -->
+    <div class="page" id="page-cafe">
+      <div class="page-wrap">
+        <div class="page-section-title" style="margin-bottom:16px">ห้องอ่านหนังสือสาธารณะ ☕</div>
+        <div class="cafe-grid" id="cafe-grid"></div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: STATS ═══════════════════════════ -->
+    <div class="page" id="page-stats">
+      <div class="page-wrap">
+        <div class="page-section-title" style="margin-bottom:14px">สถิติของคุณ 📊</div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="page-section-title" style="margin-bottom:10px;margin-top:8px">Activity heatmap (30 วัน)</div>
+        <div class="heatmap-row" id="heatmap"></div>
+        <div class="page-section-title" style="margin-bottom:10px;margin-top:20px">เส้นทางยอดนิยม</div>
+        <div id="route-bars"></div>
+      </div>
+    </div>
+
+  </div><!-- /app-content -->
+</div><!-- /app-page -->
+
+<!-- Goal Modal -->
+<div class="mo" id="goal-mo">
+  <div class="md">
+    <div class="mh">🎯 ตั้ง Goal <button class="mc" onclick="closeGoal()">✕</button></div>
+    <div class="gtabs">
+      <button class="gtab active" id="gt-h" onclick="setGTab('h')">⏰ ชั่วโมง/วัน</button>
+      <button class="gtab" id="gt-c" onclick="setGTab('c')">📍 Checkpoint</button>
+    </div>
+    <div class="gsec show" id="gs-h">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px">เลือกเป้าหมายชั่วโมงต่อวัน</div>
+      <div class="ghgrid">
+        <button class="ghbtn" onclick="pickHr(1,this)">1h</button><button class="ghbtn" onclick="pickHr(2,this)">2h</button>
+        <button class="ghbtn" onclick="pickHr(3,this)">3h</button><button class="ghbtn" onclick="pickHr(4,this)">4h</button>
+        <button class="ghbtn" onclick="pickHr(6,this)">6h</button><button class="ghbtn" onclick="pickHr(8,this)">8h</button>
+        <button class="ghbtn" onclick="pickHr(10,this)">10h</button><button class="ghbtn" id="cust-btn" onclick="pickHr(0,this)">กำหนดเอง</button>
+      </div>
+      <div class="gcustom" id="cust-row" style="display:none">
+        <input type="number" min="0.5" max="24" step="0.5" id="cust-inp" placeholder="0"><span>ชั่วโมง</span>
+      </div>
+      <button class="btn-confirm" onclick="confirmGoal()">บันทึก Goal ✓</button>
+    </div>
+    <div class="gsec" id="gs-c">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px">เลือกสถานีปลายทาง goal</div>
+      <div class="cplist" id="cplist"></div>
+      <button class="btn-confirm" onclick="confirmGoal()">บันทึก Goal ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Share Track Modal -->
+<div class="mo" id="share-mo">
+  <div class="md">
+    <div class="mh">🔗 Share Track <button class="mc" onclick="closeShare()">✕</button></div>
+    <div class="sopts">
+      <div class="sopt sel" id="sopt-l" onclick="setShare('l')">
+        <div class="sopt-icon">🔗</div>
+        <div><div class="sopt-title">Invite Link</div><div class="sopt-desc">ใครที่มีลิงก์เข้าร่วมได้เลย</div></div>
+      </div>
+      <div class="sopt" id="sopt-c" onclick="setShare('c')">
+        <div class="sopt-icon">🔒</div>
+        <div><div class="sopt-title">Private Code</div><div class="sopt-desc">รหัส 6 หลัก เฉพาะคนที่คุณแชร์</div></div>
+      </div>
+    </div>
+    <div id="share-l" style="margin-top:11px">
+      <div class="slink-box"><span id="share-url">trackracing.app/join/NORTH-X7K2Q</span><button class="copy-btn" id="copy-btn" onclick="copyLink()">คัดลอก</button></div>
+    </div>
+    <div id="share-c" style="display:none;margin-top:11px">
+      <div style="font-size:0.76rem;color:var(--muted);text-align:center;margin-bottom:6px">รหัสเข้าร่วม track</div>
+      <div class="code-big">X7K2Q9</div>
+      <div class="or-div">— หรือกรอกรหัสเพื่อน —</div>
+      <input class="inp" placeholder="X X X X X X" maxlength="8" style="text-align:center;font-family:'Orbitron',monospace;font-size:1rem;letter-spacing:6px">
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════
+const ROUTES=[
+  {id:'n',name:'สายเหนือ — กรุงเทพ → เชียงใหม่',sub:'~750 กม.',type:'mtn',sky:['#1a2a4a','#3a6a4a'],
+   stops:[{l:'กรุงเทพฯ',p:3,e:'🏙️'},{l:'อยุธยา',p:20,e:'🏛️'},{l:'พิษณุโลก',p:44,e:'🌅'},{l:'ลำปาง',p:69,e:'⛰️'},{l:'เชียงใหม่',p:96,e:'🌿'}],
+   cards:[{e:'🏛️',n:'อยุธยา',d:'โบราณสถาน วิวยามเย็น'},{e:'🌅',n:'พิษณุโลก',d:'ทุ่งนาเขียว แสงเช้า'},{e:'🌁',n:'ลำปาง→เชียงใหม่',d:'หมอกเช้า เขาสลับซับซ้อน'},{e:'🌿',n:'เชียงใหม่',d:'ดอย ธรรมชาติ'}]},
+  {id:'e',name:'สายอีสาน — โคราช → ขอนแก่น',sub:'ที่ราบสูง ทุ่งกว้าง',type:'flat',sky:['#0d1b3e','#c8651a'],
+   stops:[{l:'โคราช',p:3,e:'🏙️'},{l:'บุรีรัมย์',p:30,e:'🌾'},{l:'สุรินทร์',p:55,e:'🐘'},{l:'ขอนแก่น',p:96,e:'🌅'}],
+   cards:[{e:'🌾',n:'ทุ่งโคราช',d:'ไร่อ้อย เส้นขอบฟ้ายาว'},{e:'🌅',n:'พระอาทิตย์ตก',d:'ท้องฟ้าสีทอง'},{e:'🏕️',n:'ชุมชนอีสาน',d:'วิถีชีวิตชนบท'}]},
+  {id:'s',name:'สายใต้ — หัวหิน → ชุมพร',sub:'ทะเล ป่ามะพร้าว',type:'sea',sky:['#0a1a3a','#2a9aba'],
+   stops:[{l:'หัวหิน',p:3,e:'🌊'},{l:'ประจวบฯ',p:38,e:'🍍'},{l:'บางสะพาน',p:67,e:'🥥'},{l:'ชุมพร',p:96,e:'🌴'}],
+   cards:[{e:'🌊',n:'หัวหิน',d:'ทะเลอ่าวไทย'},{e:'🍍',n:'ประจวบฯ',d:'ไร่สับปะรดยาว'},{e:'🥥',n:'บางสะพาน',d:'สวนมะพร้าว ทะเลมรกต'}]},
+  {id:'m',name:'สายแม่กลอง — สมุทรสาคร → สมุทรสงคราม',sub:'รถไฟลอดตลาด',type:'mkt',sky:['#2a1a0a','#aa6a2a'],
+   stops:[{l:'สมุทรสาคร',p:3,e:'🚢'},{l:'ตลาดร่มหุบ',p:50,e:'🛒'},{l:'แม่กลอง',p:96,e:'🌅'}],
+   cards:[{e:'🛒',n:'ตลาดร่มหุบ',d:'ร้านค้าบนทางรถไฟ!'},{e:'🚢',n:'สมุทรสาคร',d:'ท่าเรือ ชุมชนชายฝั่ง'},{e:'🌊',n:'สมุทรสงคราม',d:'ตลาดน้ำอัมพวา'}]},
+];
+const CHAPTERS=[
+  {ch:1,badge:'🌄 Ch.1',from:'เชียงใหม่',to:'เชียงราย',sky:['#1a2a4a','#2a4a3a'],type:'mtn2',
+   stops:[{l:'เชียงใหม่',p:3,e:'🌿'},{l:'ลำพูน',p:22,e:'🏯'},{l:'ดอยสะเก็ด',p:45,e:'🏔️'},{l:'แม่คาว',p:68,e:'🌲'},{l:'เชียงราย',p:96,e:'🌅'}],
+   cards:[{e:'🏯',n:'ลำพูน',d:'วัดเก่าแก่'},{e:'🏔️',n:'ดอยสะเก็ด',d:'สวนดอกไม้บนดอย'},{e:'🌅',n:'เชียงราย',d:'วัดร่องขุ่น'}]},
+  {ch:2,badge:'🌏 Ch.2',from:'เชียงราย',to:'หลวงน้ำทา',sky:['#0d1a2e','#1a3a2a'],type:'jungle',
+   stops:[{l:'เชียงราย',p:3,e:'🌅'},{l:'แม่สาย',p:25,e:'🛂'},{l:'ชายแดน',p:50,e:'🚧'},{l:'หลวงน้ำทา',p:96,e:'🌴'}],
+   cards:[{e:'🛂',n:'แม่สาย',d:'จุดผ่านแดนไทย-พม่า'},{e:'🌴',n:'หลวงน้ำทา',d:'เมืองชายแดนลาว'}]},
+  {ch:3,badge:'🏛️ Ch.3',from:'หลวงน้ำทา',to:'หลวงพระบาง',sky:['#1a1a3a','#3a2a5a'],type:'night',
+   stops:[{l:'หลวงน้ำทา',p:3,e:'🌴'},{l:'อุดมไชย',p:30,e:'⛰️'},{l:'ปากแบ่ง',p:58,e:'🌊'},{l:'หลวงพระบาง',p:96,e:'🕌'}],
+   cards:[{e:'⛰️',n:'อุดมไชย',d:'ขุนเขาลาวเหนือ'},{e:'🌊',n:'ปากแบ่ง',d:'โค้งแม่น้ำโขง'},{e:'🕌',n:'หลวงพระบาง',d:'มรดกโลก UNESCO'}]},
+  {ch:4,badge:'🌊 Ch.4',from:'หลวงพระบาง',to:'เวียงจันทน์',sky:['#0a1828','#1a5a6a'],type:'river',
+   stops:[{l:'หลวงพระบาง',p:3,e:'🕌'},{l:'วังเวียง',p:38,e:'🏞️'},{l:'หินเหิน',p:65,e:'🌄'},{l:'เวียงจันทน์',p:96,e:'🏙️'}],
+   cards:[{e:'🏞️',n:'วังเวียง',d:'แก่งน้ำซอง'},{e:'🏙️',n:'เวียงจันทน์',d:'พระธาตุหลวง'}]},
+  {ch:5,badge:'🌸 Ch.5',from:'เวียงจันทน์',to:'ฮานอย',sky:['#1a0a2a','#4a1a5a'],type:'dusk',
+   stops:[{l:'เวียงจันทน์',p:3,e:'🏙️'},{l:'ท่าแขก',p:28,e:'🌉'},{l:'ด่านซาววาน',p:55,e:'🚧'},{l:'ฮานอย',p:96,e:'🏮'}],
+   cards:[{e:'🌉',n:'ท่าแขก',d:'สะพานข้ามโขง'},{e:'🏮',n:'ฮานอย',d:'ทะเลสาบฮว่านเกี๋ยม'}]},
+  {ch:6,badge:'🌃 Ch.6',from:'ฮานอย',to:'ปักกิ่ง',sky:['#050510','#1a1a3a'],type:'midnight',
+   stops:[{l:'ฮานอย',p:3,e:'🏮'},{l:'หนานหนิง',p:30,e:'🏙️'},{l:'กุ้ยหลิน',p:60,e:'⛰️'},{l:'ปักกิ่ง',p:96,e:'🏯'}],
+   cards:[{e:'⛰️',n:'กุ้ยหลิน',d:'ภูเขาหินปูน'},{e:'🏯',n:'ปักกิ่ง',d:'กำแพงเมืองจีน'}]},
+];
+const FRIENDS=[
+  {n:'น้องมิ้นท์',e:'🐱',on:true, p:.28,h:2.5,gp:42},
+  {n:'พี่โบว์',   e:'🐻',on:true, p:.55,h:3.1,gp:62},
+  {n:'นายอาร์ม', e:'🦊',on:false,p:.70,h:4.8,gp:96},
+  {n:'คุณเนย',   e:'🐼',on:false,p:.12,h:0.8,gp:16},
+];
+
+// App state
+let curRoute=0,active=false,secs=0,tiv=null,tpct=.04;
+let shareT='l',gTab='h',gHrs=0,gCpPct=0,selHr=0,selCpIdx=-1;
+let user=null,regMode=false,curChapter=-1,transitioning=false;
+const TRAIN_SPEED=(0.97-0.04)/1800;
+
+// ── NOTES STATE ──────────────────────
+let noteFilter='all';
+let notes=[
+  {id:1,userId:'demo1',userName:'พี่โบว์',userEmoji:'🐻',title:'เทคนิค Pomodoro สำหรับอ่านหนังสือข้ามคืน',body:'ลอง 25 นาทีอ่าน + 5 นาทีพัก แล้วทำซ้ำ 4 รอบ จากนั้นพัก 30 นาที\n\nสิ่งสำคัญคือต้องวางโทรศัพท์ออกไปจากสายตาก่อนเริ่ม ไม่อย่างนั้น 5 นาทีพักกลายเป็น 1 ชั่วโมงทุกที 😅',tags:['💡 ทริค','📚 อ่านหนังสือ'],bm:false,ts:'2 ชม. ที่แล้ว'},
+  {id:2,userId:'demo2',userName:'น้องมิ้นท์',userEmoji:'🐱',title:'สรุป: วิธีจำ vocabulary ภาษาอังกฤษแบบ Spaced Repetition',body:'ใช้แอป Anki + เพิ่ม card ทุกคำที่เจอในวันนั้น\nตอนนอนก่อนหลับ review 10-15 นาที\n\nผลลัพธ์หลัง 3 เดือน: จำได้ 80%+ ไม่ต้องท่อง',tags:['🧠 สรุป','💡 ทริค'],bm:false,ts:'5 ชม. ที่แล้ว'},
+  {id:3,userId:'demo3',userName:'นายอาร์ม',userEmoji:'🦊',title:'เส้นทางการเรียน Data Science จากศูนย์',body:'เดือน 1: Python พื้นฐาน (CS50P)\nเดือน 2: Pandas, NumPy, Matplotlib\nเดือน 3: Machine Learning (Andrew Ng)\n\nใช้เวลา 2-3 ชม./วัน กับ trackracing ช่วยได้มากในการ track progress',tags:['🎯 เป้าหมาย','📚 อ่านหนังสือ'],bm:false,ts:'เมื่อวาน'},
+];
+let nextNoteId=4;
+let selectedTags=[];
+
+// ════════════════════════════════════════
+// CLOCK
+// ════════════════════════════════════════
+function tick(){
+  const n=new Date();
+  document.getElementById('date-d').textContent=n.toLocaleDateString('th-TH',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('time-d').textContent=n.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+tick(); setInterval(tick,1000);
+
+// ════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════
+function loginGoogle(){go('นักอ่านสาย G','🌟');}
+function loginEmail(){const e=document.getElementById('lemail').value.trim();if(!e){toast('กรุณากรอกอีเมล');return;}go(e.split('@')[0],'📚');}
+function register(){const n=document.getElementById('rname').value.trim();if(!n){toast('กรุณากรอกชื่อ');return;}go(n,'✨');}
+function toggleAuth(){
+  regMode=!regMode;
+  document.getElementById('lform').style.display=regMode?'none':'block';
+  document.getElementById('rform').style.display=regMode?'block':'none';
+  document.getElementById('atog').innerHTML=regMode?'มีบัญชีแล้ว? <a onclick="toggleAuth()">เข้าสู่ระบบ</a>':'ยังไม่มีบัญชี? <a onclick="toggleAuth()">สมัครสมาชิก</a>';
+}
+function go(name,emoji){
+  user={name,emoji,id:'me'};
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app-page').style.display='block';
+  document.getElementById('nav-avatar').textContent=emoji;
+  document.getElementById('nav-uname').textContent=name;
+  document.getElementById('compose-av').textContent=emoji;
+  document.getElementById('compose-uname').textContent=name;
+  selRoute(0); renderFriends(); renderRank();
+  initFindPage(); initCafePage(); initStatsPage();
+  renderNotes();
+  setTimeout(()=>{updateTrain();updateTrainAvatar();},50);
+  toast('ยินดีต้อนรับ '+name+' 🎉');
+}
+function logout(){
+  document.getElementById('app-page').style.display='none';
+  document.getElementById('login-page').style.display='flex';
+  if(active) toggleSession();
+  secs=0;tpct=.04;curChapter=-1;transitioning=false;
+  document.getElementById('timer').textContent='00:00:00';
+}
+
+// ════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════
+const PAGE_TITLES={track:'🚂 Track Racer',find:'🧭 Find my way',share:'📦 Sharing Box',cafe:'☕ Cafe',stats:'📊 Stats'};
+function setNav(page){
+  ['track','find','share','cafe','stats'].forEach(p=>{
+    document.getElementById('nav-'+p)?.classList.toggle('active',p===page);
+    document.getElementById('btab-'+p)?.classList.toggle('active',p===page);
+    document.getElementById('page-'+p)?.classList.toggle('active',p===page);
+  });
+  document.getElementById('page-title').textContent=PAGE_TITLES[page];
+  if(page==='track') setTimeout(()=>{drawActiveScene();renderFriends();updateTrain();},10);
+}
+
+// ════════════════════════════════════════
+// ROUTE / SCENE
+// ════════════════════════════════════════
+function selRoute(i){
+  curRoute=i; curChapter=-1;
+  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+  drawActiveScene(); drawActiveStops(); drawActiveCards(); buildCpList();
+  updateRouteTitleBar(); updateTrain();
+}
+function updateRouteTitleBar(){
+  if(curChapter>=0){
+    const ch=CHAPTERS[Math.min(curChapter,CHAPTERS.length-1)];
+    document.getElementById('rttl').innerHTML=`${ch.badge} ${ch.from} → ${ch.to} <span>Chapter ${ch.ch}</span>`;
+  } else {
+    const r=ROUTES[curRoute];
+    document.getElementById('rttl').innerHTML=`${r.name} <span>${r.sub}</span>`;
+  }
+}
+function getActiveScene(){return(curChapter<0||!active)?ROUTES[curRoute]:CHAPTERS[Math.min(curChapter,CHAPTERS.length-1)];}
+
+function drawActiveScene(){
+  const sc=getActiveScene(),c=document.getElementById('scene'),sw=document.getElementById('sw');
+  c.width=sw.offsetWidth||1200; c.height=sw.offsetHeight||280;
+  const W=c.width,H=c.height,ctx=c.getContext('2d');
+  const sg=ctx.createLinearGradient(0,0,0,H*.75);
+  sg.addColorStop(0,sc.sky[0]); sg.addColorStop(1,sc.sky[1]);
+  ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
+  const t=sc.type;
+  if(t==='mtn'||t==='mtn2') drawMtn(ctx,W,H);
+  else if(t==='flat') drawFlat(ctx,W,H);
+  else if(t==='sea') drawSea(ctx,W,H);
+  else if(t==='mkt') drawMkt(ctx,W,H);
+  else if(t==='jungle') drawJungle(ctx,W,H);
+  else if(t==='night') drawNight(ctx,W,H);
+  else if(t==='river') drawRiver(ctx,W,H);
+  else if(t==='dusk') drawDusk(ctx,W,H);
+  else if(t==='midnight') drawMidnight(ctx,W,H);
+  const gmap={flat:['#a0722a','#6a4a1a'],sea:['#1a4a1a','#0e2e0e'],mkt:['#2a1a0a','#1a0e05'],
+    jungle:['#0a1a0a','#061006'],night:['#050510','#02020a'],river:['#0a1828','#06101a'],
+    dusk:['#1a0a0a','#100505'],midnight:['#050508','#020203']};
+  const gc=gmap[t]||['#2a5a2a','#1a3a1a'];
+  const gg=ctx.createLinearGradient(0,H*.72,0,H);
+  gg.addColorStop(0,gc[0]); gg.addColorStop(1,gc[1]);
+  ctx.fillStyle=gg; ctx.fillRect(0,H*.72,W,H);
+  const ry=H*.795;
+  ctx.strokeStyle='#888'; ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(0,ry);ctx.lineTo(W,ry);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,ry+7);ctx.lineTo(W,ry+7);ctx.stroke();
+  ctx.strokeStyle='#5a4a3a'; ctx.lineWidth=4;
+  for(let x=30;x<W;x+=58){ctx.beginPath();ctx.moveTo(x,ry-4);ctx.lineTo(x,ry+11);ctx.stroke();}
+  if(curChapter>=0&&active){
+    const ch=CHAPTERS[Math.min(curChapter,CHAPTERS.length-1)];
+    ctx.fillStyle='rgba(0,0,0,0.5)';
+    try{ctx.beginPath();ctx.roundRect(W-114,8,106,26,6);ctx.fill();}catch(e){ctx.fillRect(W-114,8,106,26);}
+    ctx.fillStyle='#f5d97e';ctx.font='bold 11px Sarabun,sans-serif';ctx.textAlign='right';
+    ctx.fillText(ch.badge+' '+ch.from+' → '+ch.to,W-10,25);ctx.textAlign='left';
+  }
+}
+
+function drawMtn(ctx,W,H){
+  for(let i=0;i<22;i++){ctx.fillStyle='rgba(255,255,255,0.5)';ctx.beginPath();ctx.arc(Math.random()*W,Math.random()*(H*.36),Math.random()*1.3,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='#1a3a2a';ctx.beginPath();ctx.moveTo(0,H*.7);
+  for(let i=0;i<=10;i++)ctx.lineTo(W/10*i,i%2?H*.58:H*.3);
+  ctx.lineTo(W,H*.7);ctx.fill();
+  ctx.fillStyle='#2a5a2a';ctx.beginPath();ctx.moveTo(0,H*.75);
+  for(let i=0;i<=14;i++)ctx.lineTo(W/14*i,i%2?H*.63:H*.39);
+  ctx.lineTo(W,H*.75);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.04)';
+  ctx.beginPath();ctx.ellipse(W*.28,H*.53,W*.2,15,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(W*.7,H*.49,W*.18,13,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(245,240,160,0.1)';ctx.beginPath();ctx.arc(W*.88,42,25,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a2a4a';ctx.beginPath();ctx.arc(W*.88-6,38,25,0,Math.PI*2);ctx.fill();
+}
+function drawFlat(ctx,W,H){
+  const sx=W*.82,sy=H*.63;
+  const g=ctx.createRadialGradient(sx,sy,5,sx,sy,120);
+  g.addColorStop(0,'rgba(255,200,60,.26)');g.addColorStop(1,'rgba(255,120,0,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(sx,sy,120,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,255,160,.88)';ctx.beginPath();ctx.arc(sx,sy,20,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(25,12,0,.62)';
+  for(let x=110;x<W*.7;x+=62){ctx.beginPath();ctx.arc(x,H*.63,11,0,Math.PI*2);ctx.fill();ctx.fillRect(x-3,H*.63,6,20);}
+  ctx.strokeStyle='rgba(80,80,80,.38)';ctx.lineWidth=1.5;
+  for(let x=70;x<W;x+=155){ctx.beginPath();ctx.moveTo(x,H*.57);ctx.lineTo(x,H*.78);ctx.stroke();}
+  ctx.beginPath();ctx.moveTo(0,H*.59);ctx.lineTo(W,H*.59);ctx.stroke();
+}
+function drawSea(ctx,W,H){
+  const sg=ctx.createLinearGradient(0,H*.53,0,H*.74);
+  sg.addColorStop(0,'#1a7aaa');sg.addColorStop(1,'#0a4a6a');
+  ctx.fillStyle=sg;ctx.fillRect(0,H*.53,W,H*.21);
+  ctx.strokeStyle='rgba(255,255,255,.16)';ctx.lineWidth=1;
+  for(let x=0;x<W;x+=82){ctx.beginPath();ctx.moveTo(x,H*.59);ctx.lineTo(x+45,H*.59);ctx.stroke();}
+  [.09,.2,.75,.88].forEach(px=>{
+    const tx=W*px,ty=H*.73;
+    ctx.strokeStyle='#5a3a1a';ctx.lineWidth=5;
+    ctx.beginPath();ctx.moveTo(tx,ty);ctx.quadraticCurveTo(tx+8,ty-38,tx+4,ty-65);ctx.stroke();
+    ctx.strokeStyle='#2a6a1a';ctx.lineWidth=6;
+    for(let a=-55;a<=55;a+=28){const rd=a*Math.PI/180;ctx.beginPath();ctx.moveTo(tx+4,ty-65);ctx.lineTo(tx+4+Math.sin(rd)*32,ty-65-Math.cos(rd)*9);ctx.stroke();}
+  });
+}
+function drawMkt(ctx,W,H){
+  const cs=['#5a3a1a','#6a4a2a','#7a5a3a','#4a2a0a'];
+  for(let x=0;x<W;x+=50){
+    const h=62+((x*7)%28);ctx.fillStyle=cs[Math.floor(x/50)%cs.length];
+    ctx.fillRect(x,H*.52-h,48,h+H*.2);ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(x,H*.52-h,48,4);
+    ctx.fillStyle='rgba(245,217,126,.6)';
+    for(let wy=H*.52-h+9;wy<H*.52-4;wy+=16)for(let wx=x+5;wx<x+43;wx+=13)ctx.fillRect(wx,wy,7,6);
+  }
+  const sc=['#e74c3c','#27ae60','#f39c12','#9b59b6','#3498db'];
+  for(let x=0;x<W;x+=29){ctx.fillStyle=sc[Math.floor(x/29)%sc.length];ctx.globalAlpha=.8;ctx.fillRect(x,H*.70,26,14);ctx.globalAlpha=1;}
+}
+function drawJungle(ctx,W,H){
+  ctx.fillStyle='#0a1a0a';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(200,220,160,0.12)';ctx.beginPath();ctx.arc(W*.15,50,30,0,Math.PI*2);ctx.fill();
+  ['#0d2a0d','#143814','#1a4a1a','#225522'].forEach((c,i)=>{
+    ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(0,H*(0.55-i*.04));
+    for(let x=0;x<=W;x+=W/18)ctx.quadraticCurveTo(x+W/36,(H*(0.48-i*.04))+Math.sin(x*.02+i)*18,x+W/18,H*(0.55-i*.04));
+    ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();
+  });
+  for(let i=0;i<14;i++){ctx.fillStyle=`rgba(200,255,100,${0.3+Math.random()*.4})`;ctx.beginPath();ctx.arc(Math.random()*W,H*.3+Math.random()*(H*.4),1.5,0,Math.PI*2);ctx.fill();}
+}
+function drawNight(ctx,W,H){
+  const g=ctx.createLinearGradient(0,0,0,H*.8);g.addColorStop(0,'#050510');g.addColorStop(1,'#1a1a3a');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  for(let i=0;i<60;i++){ctx.fillStyle=`rgba(255,255,255,${0.4+Math.random()*.6})`;ctx.beginPath();ctx.arc(Math.random()*W,Math.random()*(H*.5),Math.random()*1.8,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='rgba(255,250,200,0.9)';ctx.beginPath();ctx.arc(W*.8,55,28,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,250,200,0.12)';ctx.beginPath();ctx.arc(W*.8,55,45,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#050510';ctx.beginPath();ctx.arc(W*.8-10,50,28,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(10,5,20,0.95)';
+  [[W*.35,H*.38,14,H*.55],[W*.5,H*.32,20,H*.55],[W*.65,H*.4,12,H*.55]].forEach(([x,y,w,b])=>{
+    ctx.fillRect(x-w/2,y,w,b-y);
+    for(let t=0;t<4;t++){ctx.beginPath();ctx.moveTo(x-(w+t*8)/2,y+t*10);ctx.lineTo(x+(w+t*8)/2,y+t*10);ctx.lineTo(x+(w+t*6)/2,y+t*10+8);ctx.lineTo(x-(w+t*6)/2,y+t*10+8);ctx.fill();}
+  });
+  ctx.fillStyle='#0d0d22';ctx.beginPath();ctx.moveTo(0,H*.72);
+  for(let i=0;i<=10;i++)ctx.lineTo(W/10*i,H*(i%2?0.55:0.68));ctx.lineTo(W,H*.72);ctx.fill();
+}
+function drawRiver(ctx,W,H){
+  const g=ctx.createLinearGradient(0,0,0,H*.7);g.addColorStop(0,'#0a1828');g.addColorStop(0.6,'#1a3a5a');g.addColorStop(1,'#2a6a7a');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  const sg=ctx.createRadialGradient(W*.5,H*.85,5,W*.5,H*.85,W*.4);
+  sg.addColorStop(0,'rgba(255,180,60,0.5)');sg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=sg;ctx.fillRect(0,H*.6,W,H*.4);
+  [.62,.67,.71,.75].forEach((y,i)=>{ctx.strokeStyle=`rgba(255,200,80,${0.08+i*.04})`;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,H*y);ctx.bezierCurveTo(W*.25,H*(y-.02),W*.75,H*(y+.02),W,H*y);ctx.stroke();});
+  ctx.fillStyle='#0d1f2a';ctx.beginPath();ctx.moveTo(0,H*.6);
+  for(let i=0;i<=12;i++)ctx.lineTo(W/12*i,H*(i%2?0.4:0.58));ctx.lineTo(W,H*.6);ctx.fill();
+}
+function drawDusk(ctx,W,H){
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#1a0a2a');g.addColorStop(0.4,'#5a1a3a');g.addColorStop(0.7,'#c0501a');g.addColorStop(1,'#4a1a0a');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,255,200,0.8)';ctx.beginPath();ctx.arc(W*.25,H*.12,3,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a0a14';
+  const bldgs=[[0,60],[60,45],[90,75],[130,50],[160,80],[200,55],[240,65],[290,45],[330,70],[370,50],[410,85],[460,60],[500,55],[550,70],[590,50],[640,80],[690,55],[730,65],[770,50],[810,75],[850,60],[890,55]];
+  ctx.beginPath();ctx.moveTo(0,H*.65);
+  bldgs.forEach(([x,h])=>{ctx.lineTo(x/900*W,H*.65-h/100*(H*.3));ctx.lineTo((x+55)/900*W,H*.65-h/100*(H*.3));});
+  ctx.lineTo(W,H*.65);ctx.fill();
+  for(let i=0;i<30;i++){ctx.fillStyle='rgba(255,220,100,0.6)';ctx.fillRect(Math.random()*W,H*.38+Math.random()*(H*.24),3,4);}
+}
+function drawMidnight(ctx,W,H){
+  ctx.fillStyle='#020208';ctx.fillRect(0,0,W,H);
+  for(let i=0;i<80;i++){ctx.fillStyle=`rgba(255,255,255,${Math.random()*.7})`;ctx.beginPath();ctx.arc(Math.random()*W,Math.random()*(H*.55),Math.random()*1.5,0,Math.PI*2);ctx.fill();}
+  const mw=ctx.createLinearGradient(0,H*.1,W,H*.4);mw.addColorStop(0,'rgba(180,160,255,0)');mw.addColorStop(0.5,'rgba(180,160,255,0.06)');mw.addColorStop(1,'rgba(180,160,255,0)');
+  ctx.fillStyle=mw;ctx.fillRect(0,0,W,H*.5);
+  const cg=ctx.createRadialGradient(W*.7,H*.7,0,W*.7,H*.7,W*.3);cg.addColorStop(0,'rgba(255,150,50,0.15)');cg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=cg;ctx.fillRect(0,H*.5,W,H*.5);
+  ctx.fillStyle='#080810';ctx.beginPath();ctx.moveTo(0,H*.75);
+  for(let i=0;i<=16;i++)ctx.lineTo(W/16*i,H*(i%2?0.6:0.72));ctx.lineTo(W,H*.75);ctx.fill();
+}
+
+function drawActiveStops(){
+  const sc=getActiveScene(),sw=document.getElementById('sw'),sl=document.getElementById('sl');
+  sl.innerHTML='';
+  const W=sw.offsetWidth||1200,H=sw.offsetHeight||280,ry=H*.795;
+  sc.stops.forEach(s=>{
+    const x=s.p/100*W;
+    const line=document.createElement('div');line.className='stn-line';line.style.cssText=`left:${x}px;bottom:${H-ry+3}px;height:44px;`;sl.appendChild(line);
+    const sign=document.createElement('div');sign.className='stn-sign';sign.style.cssText=`left:${x}px;bottom:${H-ry+46}px;`;sign.textContent=`${s.e} ${s.l}`;sl.appendChild(sign);
+    const dot=document.createElement('div');dot.className='track-dot';dot.style.cssText=`left:${x}px;bottom:${H-ry-10}px;`;sl.appendChild(dot);
+  });
+  drawGoalMarker();
+}
+function drawGoalMarker(){
+  const old=document.getElementById('gmk');if(old)old.remove();if(!gCpPct)return;
+  const sw=document.getElementById('sw'),sl=document.getElementById('sl');
+  const W=sw.offsetWidth||1200,H=sw.offsetHeight||280,ry=H*.795;
+  const el=document.createElement('div');el.id='gmk';
+  el.style.cssText=`position:absolute;left:${gCpPct*W}px;bottom:${H-ry-22}px;width:26px;height:26px;transform:translateX(-50%);background:rgba(245,217,126,0.12);border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;z-index:5;box-shadow:0 0 12px rgba(245,217,126,.38);`;
+  el.textContent='🏁';sl.appendChild(el);
+}
+function drawActiveCards(){
+  const sc=getActiveScene();
+  document.getElementById('cards').innerHTML=(sc.cards||[]).map(c=>`<div class="card"><div class="ci">${c.e}</div><div class="cn">${c.n}</div><div class="cd">${c.d}</div></div>`).join('');
+}
+function renderFriends(){
+  const sw=document.getElementById('sw'),fl=document.getElementById('fl');fl.innerHTML='';
+  const W=sw.offsetWidth||1200,H=sw.offsetHeight||280,ry=H*.795;
+  FRIENDS.forEach(f=>{
+    const x=f.p*W;
+    const w=document.createElement('div');w.style.cssText=`position:absolute;left:${x}px;bottom:${H-ry+3}px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;`;
+    const pip=document.createElement('div');pip.className='friend-pip'+(f.on?'':' idle');pip.textContent=f.e;pip.title=f.n;pip.style.animationDelay=`${(f.p*2.5).toFixed(1)}s`;
+    const nt=document.createElement('div');nt.style.cssText='font-size:9px;color:rgba(255,255,255,.6);background:rgba(0,0,0,.5);padding:1px 5px;border-radius:4px;white-space:nowrap;';nt.textContent=f.n;
+    w.appendChild(pip);w.appendChild(nt);fl.appendChild(w);
+  });
+}
+
+// ════════════════════════════════════════
+// SESSION
+// ════════════════════════════════════════
+function toggleSession(){
+  const btn=document.getElementById('join-btn'),sw=document.getElementById('sw');
+  if(!active){
+    active=true;btn.textContent='⏹ stop';btn.classList.add('running');sw.classList.add('live');
+    tiv=setInterval(()=>{
+      secs++;updTimer();tpct=Math.min(0.97,tpct+TRAIN_SPEED);updateTrain();
+      if(tpct>=0.96&&!transitioning)doChapterTransition();
+      if(secs%30===0)renderRank();
+    },1000);
+  } else {
+    active=false;btn.textContent='▶ join track';btn.classList.remove('running');sw.classList.remove('live');
+    clearInterval(tiv);renderRank();
+  }
+}
+function updTimer(){const h=Math.floor(secs/3600),m=Math.floor(secs%3600/60),s=secs%60;document.getElementById('timer').textContent=`${P(h)}:${P(m)}:${P(s)}`;}
+function P(n){return String(n).padStart(2,'0');}
+function updateTrain(){
+  const sw=document.getElementById('sw'),W=sw.offsetWidth||1200,H=sw.offsetHeight||280;
+  const ry=H*.795,trainBottom=H-ry-6;
+  const tw=document.getElementById('train-wrap');
+  tw.style.left=tpct*W+'px';tw.style.bottom=trainBottom+'px';tw.style.top='auto';
+}
+function updateTrainAvatar(){
+  if(!user)return;
+  document.getElementById('train-avatar').textContent=user.emoji;
+  const n=user.name.length>8?user.name.slice(0,7)+'…':user.name;
+  document.getElementById('train-nametag').textContent=n;
+}
+
+// Chapter transitions
+function doChapterTransition(){
+  if(transitioning)return;transitioning=true;
+  const nextIdx=curChapter+1,nextChap=CHAPTERS[Math.min(nextIdx,CHAPTERS.length-1)];
+  showCelebration(nextChap);
+  setTimeout(()=>{
+    curChapter=nextIdx;tpct=0.04;
+    drawActiveScene();drawActiveStops();drawActiveCards();updateRouteTitleBar();updateTrain();
+    transitioning=false;toast(`🚂 เข้าสู่ ${nextChap.from} → ${nextChap.to}!`);
+  },2800);
+}
+function showCelebration(ch){
+  const el=document.createElement('div');
+  el.style.cssText='position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);';
+  el.innerHTML=`<div style="font-size:3.5rem">🎉</div><div style="font-family:Orbitron,monospace;font-size:1.3rem;font-weight:900;color:#f5d97e;margin:10px 0 4px;text-align:center;padding:0 20px">ถึงสถานีปลายทางแล้ว!</div><div style="font-size:0.92rem;color:#aaa;margin-bottom:16px">${ch.from}</div><div style="background:rgba(245,217,126,0.12);border:1.5px solid rgba(245,217,126,0.4);border-radius:14px;padding:12px 26px;text-align:center"><div style="font-size:0.76rem;color:#6b7a99;margin-bottom:4px">Chapter ถัดไป</div><div style="font-size:1.05rem;font-weight:700">${ch.badge} ${ch.from} → ${ch.to}</div></div><div style="margin-top:18px;font-size:2rem">🚂💨</div>`;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),2600);
+}
+
+// ════════════════════════════════════════
+// RANKING
+// ════════════════════════════════════════
+function renderRank(){
+  const me={n:user?.name||'ฉัน',e:user?.emoji||'🌟',on:active,h:secs/3600,
+    gp:gHrs>0?Math.min(100,Math.round(secs/3600/gHrs*100)):gCpPct>0?Math.min(100,Math.round(tpct/gCpPct*100)):0,isMe:true};
+  const all=[...FRIENDS,me].sort((a,b)=>b.h-a.h);
+  const md=['🥇','🥈','🥉'];
+  document.getElementById('rank-body').innerHTML=all.map((u,i)=>`
+    <div class="rank-row">
+      <div class="rn ${i<3?'r'+(i+1):''}">${md[i]||'#'+(i+1)}</div>
+      <div class="ucell"><div class="av${u.on?' on':''}${u.isMe?' me':''}${u.on?' ab':''}">${u.e}<div class="sdot ${u.on?'a':'i'}"></div></div><span class="uname${u.isMe?' me':''}">${u.n}</span></div>
+      <div class="hcell">${u.h.toFixed(1)}h</div>
+      <div class="gbar"><div class="gtrack"><div class="gfill" style="width:${u.gp}%"></div></div><span class="gpct">${u.gp}%</span></div>
+      <div><span class="sbadge ${u.on?'a':'i'}">${u.on?'🟢 กำลังอ่าน':'💤 ออฟไลน์'}</span></div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════
+// GOAL
+// ════════════════════════════════════════
+function openGoal(){document.getElementById('goal-mo').classList.add('show');buildCpList();}
+function closeGoal(){document.getElementById('goal-mo').classList.remove('show');}
+function setGTab(t){gTab=t;document.getElementById('gt-h').classList.toggle('active',t==='h');document.getElementById('gt-c').classList.toggle('active',t==='c');document.getElementById('gs-h').classList.toggle('show',t==='h');document.getElementById('gs-c').classList.toggle('show',t==='c');}
+function pickHr(h,el){selHr=h;document.querySelectorAll('.ghbtn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');document.getElementById('cust-row').style.display=h===0?'flex':'none';}
+function buildCpList(){
+  const r=ROUTES[curRoute];
+  document.getElementById('cplist').innerHTML=r.stops.map((s,i)=>`<div class="cpitem${selCpIdx===i?' sel':''}" onclick="selCp(${i})"><span>${s.e}</span><span style="font-weight:600;font-size:.86rem">${s.l}</span><span class="cppct">${s.p}%</span></div>`).join('');
+}
+function selCp(i){selCpIdx=i;buildCpList();}
+function confirmGoal(){
+  if(gTab==='h'){
+    let h=selHr;if(h===0)h=parseFloat(document.getElementById('cust-inp').value)||0;if(h<=0){toast('กรุณาเลือกหรือกรอกชั่วโมง');return;}
+    gHrs=h;gCpPct=0;document.getElementById('glabel').textContent=`Goal: ${h}h/วัน`;toast(`ตั้ง Goal ${h}h ✓`);
+  } else {
+    if(selCpIdx<0){toast('กรุณาเลือกสถานี');return;}
+    const s=ROUTES[curRoute].stops[selCpIdx];gCpPct=s.p/100;gHrs=0;
+    document.getElementById('glabel').textContent=`Goal: ${s.l}`;toast(`Goal ที่ ${s.l} ✓`);drawGoalMarker();
+  }
+  closeGoal();renderRank();
+}
+
+// ════════════════════════════════════════
+// SHARE TRACK MODAL
+// ════════════════════════════════════════
+function openShare(){document.getElementById('share-mo').classList.add('show');}
+function closeShare(){document.getElementById('share-mo').classList.remove('show');}
+function setShare(t){shareT=t;document.getElementById('sopt-l').classList.toggle('sel',t==='l');document.getElementById('sopt-c').classList.toggle('sel',t==='c');document.getElementById('share-l').style.display=t==='l'?'block':'none';document.getElementById('share-c').style.display=t==='c'?'block':'none';}
+function copyLink(){navigator.clipboard?.writeText('https://trackracing.app/join/NORTH-X7K2Q').catch(()=>{});const b=document.getElementById('copy-btn');b.textContent='✓ คัดลอกแล้ว';b.classList.add('copied');setTimeout(()=>{b.textContent='คัดลอก';b.classList.remove('copied');},2e3);}
+
+// ════════════════════════════════════════
+// SHARING BOX — NOTES
+// ════════════════════════════════════════
+function toggleTag(el,tag){
+  el.classList.toggle('sel');
+  if(selectedTags.includes(tag)) selectedTags=selectedTags.filter(t=>t!==tag);
+  else selectedTags.push(tag);
+}
+function submitNote(){
+  const title=document.getElementById('compose-title').value.trim();
+  const body=document.getElementById('compose-body').value.trim();
+  if(!title||!body){toast('กรุณากรอกหัวข้อและเนื้อหา');return;}
+  notes.unshift({id:nextNoteId++,userId:'me',userName:user?.name||'You',userEmoji:user?.emoji||'🌟',
+    title,body,tags:[...selectedTags],bm:false,ts:'เมื่อกี้'});
+  document.getElementById('compose-title').value='';
+  document.getElementById('compose-body').value='';
+  document.querySelectorAll('.tag-chip').forEach(c=>c.classList.remove('sel'));
+  selectedTags=[];
+  renderNotes();toast('โพสต์แล้ว ✓ 🚂');
+}
+function filterNotes(f,el){
+  noteFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderNotes();
+}
+function renderNotes(){
+  const q=(document.getElementById('note-search')?.value||'').toLowerCase();
+  let list=notes.filter(n=>{
+    if(noteFilter==='mine'&&n.userId!=='me')return false;
+    if(noteFilter==='bookmarked'&&!n.bm)return false;
+    if(q&&!n.title.toLowerCase().includes(q)&&!n.body.toLowerCase().includes(q))return false;
+    return true;
+  });
+  document.getElementById('notes-feed').innerHTML=list.length?list.map(noteHtml).join(''):'<div style="text-align:center;color:var(--muted);padding:32px">ยังไม่มี note ในหมวดนี้</div>';
+}
+function noteHtml(n){
+  const isMe=n.userId==='me';
+  return `<div class="note-card${n.bm?' bookmarked':''}" id="note-${n.id}">
+    <div class="note-author">
+      <div class="note-av${isMe?' me':''}">${n.userEmoji}</div>
+      <div style="flex:1">
+        <div class="note-author-name${isMe?' me':''}">${n.userName}</div>
+      </div>
+      <div class="note-time">${n.ts}</div>
+    </div>
+    <div id="note-view-${n.id}">
+      <div class="note-title">${n.title}</div>
+      <div class="note-body">${n.body}</div>
+      ${n.tags.length?`<div class="note-tags">${n.tags.map(t=>`<span class="note-tag">${t}</span>`).join('')}</div>`:''}
+      <div class="note-actions">
+        <button class="note-btn bm${n.bm?' bm':''}" onclick="toggleBm(${n.id})">${n.bm?'🔖 Bookmarked':'🔖 Bookmark'}</button>
+        ${isMe?`<button class="note-btn edit" onclick="startEdit(${n.id})">✏️ แก้ไข</button><button class="note-btn del" onclick="deleteNote(${n.id})">🗑️ ลบ</button>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+function toggleBm(id){const n=notes.find(x=>x.id===id);if(n){n.bm=!n.bm;renderNotes();toast(n.bm?'🔖 Bookmarked!':'ยกเลิก bookmark');}}
+function deleteNote(id){
+  if(!confirm('ลบ note นี้?'))return;
+  notes=notes.filter(n=>n.id!==id);renderNotes();toast('ลบแล้ว 🗑️');
+}
+function startEdit(id){
+  const n=notes.find(x=>x.id===id);if(!n)return;
+  const view=document.getElementById('note-view-'+id);
+  view.innerHTML=`
+    <input class="note-edit-title" id="et-${id}" value="${n.title.replace(/"/g,'&quot;')}">
+    <textarea class="note-edit-area" id="eb-${id}" rows="4">${n.body}</textarea>
+    <div class="note-edit-actions">
+      <button class="btn-save" onclick="saveEdit(${id})">บันทึก ✓</button>
+      <button class="btn-cancel-edit" onclick="renderNotes()">ยกเลิก</button>
+    </div>`;
+}
+function saveEdit(id){
+  const n=notes.find(x=>x.id===id);if(!n)return;
+  n.title=document.getElementById('et-'+id).value.trim()||n.title;
+  n.body=document.getElementById('eb-'+id).value.trim()||n.body;
+  n.ts='แก้ไขแล้ว';renderNotes();toast('บันทึกแล้ว ✓');
+}
+
+// ════════════════════════════════════════
+// FIND PAGE
+// ════════════════════════════════════════
+function initFindPage(){
+  const rooms=[
+    {e:'🌲',name:'สายเหนือ Morning Club',desc:'อ่านหนังสือตอนเช้า 6-8 น. ทุกวัน',count:'12 คนออนไลน์'},
+    {e:'📚',name:'TCAS Prep 2025',desc:'เตรียมสอบเข้ามหาวิทยาลัย ช่วยกัน',count:'28 คนออนไลน์'},
+    {e:'💼',name:'Work & Learn',desc:'อ่านหนังสือหลังเลิกงาน 20-22 น.',count:'7 คนออนไลน์'},
+    {e:'🌙',name:'Night Owl Track',desc:'กลุ่มคนนอนดึก อ่านหนังสือด้วยกัน',count:'15 คนออนไลน์'},
+    {e:'🎓',name:'Bar Exam Study',desc:'เตรียมสอบ ป.ตรี / โท / เนติ',count:'9 คนออนไลน์'},
+    {e:'☕',name:'Slow Morning',desc:'อ่านสบายๆ ไม่รีบ ไม่กดดัน',count:'5 คนออนไลน์'},
+  ];
+  document.getElementById('find-grid').innerHTML=rooms.map(r=>`
+    <div class="find-card" onclick="toast('เข้าร่วม ${r.name} แล้ว!')">
+      <div class="find-card-emoji">${r.e}</div>
+      <div class="find-card-title">${r.name}</div>
+      <div class="find-card-desc">${r.desc}</div>
+      <div class="find-card-count">🟢 ${r.count}</div>
+    </div>`).join('');
+}
+function doFind(){const q=document.getElementById('find-q').value.trim();if(q)toast(`🔍 ค้นหา "${q}"…`);}
+
+// ════════════════════════════════════════
+// CAFE PAGE
+// ════════════════════════════════════════
+function initCafePage(){
+  const rooms=[
+    {e:'☕',bg:'#2a1a0a',name:'Study Café',desc:'ห้องอ่านหนังสือสงบ เปิด BGM lo-fi',members:'18 คน',tag:'เงียบ'},
+    {e:'🎵',bg:'#0a1a2a',name:'Lo-Fi Lounge',desc:'ฟังเพลงเบาๆ อ่านหนังสือไปด้วยกัน',members:'34 คน',tag:'เพลง'},
+    {e:'💬',bg:'#1a0a2a',name:'Q&A Room',desc:'ถาม-ตอบ ช่วยกันทำโจทย์',members:'11 คน',tag:'ถามตอบ'},
+    {e:'🏆',name:'Sprint Room',bg:'#0a2a0a',desc:'จับเวลา challenge! 2 ชั่วโมงต่อเนื่อง',members:'6 คน',tag:'challenge'},
+    {e:'🌙',bg:'#050510',name:'Night Shift',desc:'สำหรับคนอ่านดึก 22.00 – 02.00',members:'22 คน',tag:'ดึก'},
+    {e:'🌅',bg:'#2a1a0a',name:'Early Bird',desc:'ตื่นเช้ามาอ่านด้วยกัน 05.00 – 08.00',members:'8 คน',tag:'เช้า'},
+  ];
+  document.getElementById('cafe-grid').innerHTML=rooms.map(r=>`
+    <div class="cafe-card" onclick="toast('เข้า ${r.name} แล้ว! ☕')">
+      <div class="cafe-card-banner" style="background:${r.bg}20;border-bottom:1px solid var(--border)">${r.e}</div>
+      <div class="cafe-card-body">
+        <div class="cafe-card-title">${r.name}</div>
+        <div class="cafe-card-desc">${r.desc}</div>
+        <div class="cafe-card-footer"><span class="cafe-members">🟢 ${r.members}</span><span class="cafe-tag">${r.tag}</span></div>
+      </div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════
+// STATS PAGE
+// ════════════════════════════════════════
+function initStatsPage(){
+  const stats=[
+    {val:'0.0h',label:'วันนี้',sub:'เริ่มอ่านกันเถอะ!'},
+    {val:'12.4h',label:'สัปดาห์นี้',sub:'↑ 18% จากอาทิตย์ที่แล้ว'},
+    {val:'48.2h',label:'เดือนนี้',sub:'#3 ใน track ของคุณ'},
+    {val:'6',label:'วันต่อเนื่อง 🔥',sub:'สถิติ: 14 วัน'},
+  ];
+  document.getElementById('stats-grid').innerHTML=stats.map(s=>`
+    <div class="stat-card">
+      <div class="stat-card-val">${s.val}</div>
+      <div class="stat-card-label">${s.label}</div>
+      <div class="stat-card-sub">${s.sub}</div>
+    </div>`).join('');
+  const levels=[0,0,1,1,2,1,3,2,4,3,2,1,0,0,1,2,3,4,3,2,1,2,3,4,2,1,0,1,2,3];
+  document.getElementById('heatmap').innerHTML=levels.map(l=>`<div class="hm-cell${l?' l'+l:''}"></div>`).join('');
+  const routes=[{l:'สายเหนือ',v:68},{l:'สายใต้',v:45},{l:'สายอีสาน',v:32},{l:'แม่กลอง',v:18}];
+  document.getElementById('route-bars').innerHTML=routes.map(r=>`
+    <div class="bar-row">
+      <div class="bar-label">${r.l}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${r.v}%"></div></div>
+      <div class="bar-val">${r.v}%</div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════
+// MISC
+// ════════════════════════════════════════
+['goal-mo','share-mo'].forEach(id=>document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');}));
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+setInterval(()=>{FRIENDS.forEach(f=>{if(f.on)f.p=Math.min(.92,f.p+.001+Math.random()*.0015);});renderFriends();},3500);
+window.addEventListener('resize',()=>{if(user){drawActiveScene();drawActiveStops();renderFriends();updateTrain();}});
+</script>
+</body>
+</html>
