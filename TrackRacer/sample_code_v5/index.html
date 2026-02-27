@@ -657,7 +657,7 @@ let selectedTags=[];
 // ════════════════════════════════════════
 function tick(){
   const n=new Date();
-  document.getElementById('date-d').textContent=n.toLocaleDateString('th-TH',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('date-d').textContent=n.toLocaleDateString('en-GB',{month:'short',day:'numeric',year:'numeric'});
   document.getElementById('time-d').textContent=n.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
 tick(); setInterval(tick,1000);
