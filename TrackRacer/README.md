@@ -7,6 +7,7 @@
 | 26/02/26 | Trackracer | Sample code v2✅ | sample background html code for graphic |
 | 26/02/26 | Trackracer | Sample code v3✅ | time counting |
 | 27/02/26 | All | Sample code v5✅ | overview all + done layout tracks |
+| 27/02/26 | All | deploy Sample code v5✅ | ui fit ipad  [https://includna.github.io/test_deenager_sample_v5/]|
 
 <!-- <table>
     <tr>
