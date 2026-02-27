@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trackracing 🚂</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d1117; --surface:#161b22; --border:rgba(255,255,255,0.08);
+  --gold:#f5d97e; --green:#22c55e; --red:#ef4444; --text:#e8eaf6; --muted:#6b7a99;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ===== LOGIN ===== */
+#login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,#1a2a4a 0%,#0d1117 60%);}
+.login-track{position:absolute;bottom:90px;left:0;right:0;height:2px;background:rgba(255,255,255,0.05);}
+.login-rails{position:absolute;bottom:85px;left:0;right:0;height:2px;background:rgba(255,255,255,0.04);}
+.login-train-anim{position:absolute;bottom:95px;animation:ltrain 14s linear infinite;}
+@keyframes ltrain{from{left:-130px}to{left:calc(100% + 60px)}}
+.login-card{position:relative;z-index:10;background:rgba(22,27,34,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:42px 38px;width:90%;max-width:410px;box-shadow:0 40px 100px rgba(0,0,0,0.6);backdrop-filter:blur(20px);}
+.login-logo{text-align:center;margin-bottom:6px;font-family:'Orbitron',monospace;font-size:1.9rem;font-weight:900;background:linear-gradient(135deg,#ff6b35,#f5d97e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.login-tagline{text-align:center;color:var(--muted);font-size:0.86rem;margin-bottom:30px;line-height:1.5;}
+.btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:white;color:#1a1a1a;border:none;padding:12px 20px;border-radius:12px;font-size:0.93rem;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Sarabun',sans-serif;}
+.btn-google:hover{background:#f0f0f0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.2);}
+.g-icon{width:20px;height:20px;background:conic-gradient(from 90deg,#ea4335 25%,#fbbc05 25% 50%,#34a853 50% 75%,#4285f4 75%);border-radius:50%;flex-shrink:0;}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--muted);font-size:0.8rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.inp-group{margin-bottom:11px;}
+.inp-group label{display:block;font-size:0.8rem;color:var(--muted);margin-bottom:4px;}
+.inp{width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:0.93rem;outline:none;transition:border-color 0.2s;}
+.inp:focus{border-color:var(--gold);}
+.btn-primary{width:100%;background:linear-gradient(135deg,#f5d97e,#ff9a3c);color:#1a1200;border:none;padding:11px;border-radius:12px;font-family:'Sarabun',sans-serif;font-size:0.93rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:4px;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(245,217,126,0.3);}
+.auth-toggle{text-align:center;margin-top:14px;font-size:0.82rem;color:var(--muted);}
+.auth-toggle a{color:var(--gold);cursor:pointer;}
+.auth-toggle a:hover{text-decoration:underline;}
+
+/* ===== APP ===== */
+#app-page{display:none;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:11px 22px;background:rgba(13,17,23,0.96);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{font-family:'Orbitron',monospace;font-size:1.45rem;font-weight:900;background:linear-gradient(135deg,#ff6b35,#f5d97e,#ff6b35);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite;}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.badge{background:rgba(245,217,126,0.1);border:1px solid rgba(245,217,126,0.22);color:var(--gold);padding:4px 11px;border-radius:20px;font-size:0.78rem;font-weight:700;font-family:'Orbitron',monospace;}
+.user-pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:24px;padding:4px 12px 4px 6px;cursor:pointer;transition:background 0.2s;font-size:0.82rem;font-weight:600;}
+.user-pill:hover{background:rgba(255,255,255,0.09);}
+
+.tab-nav{display:flex;gap:7px;padding:14px 22px 0;flex-wrap:wrap;}
+.tab-btn{background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:var(--muted);padding:6px 17px;border-radius:30px;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:0.86rem;font-weight:600;transition:all 0.2s;}
+.tab-btn:hover{border-color:var(--gold);color:var(--gold);}
+.tab-btn.active{background:rgba(245,217,126,0.14);border-color:var(--gold);color:var(--gold);}
+
+.main{padding:14px 22px 30px;max-width:1100px;margin:0 auto;}
+.info-bar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.route-ttl{font-size:1.08rem;font-weight:700;}
+.route-ttl span{font-size:0.8rem;font-weight:400;color:var(--muted);margin-left:5px;}
+.btn-join{background:linear-gradient(135deg,#f5d97e,#ff9a3c);color:#1a1200;border:none;padding:7px 19px;border-radius:24px;font-family:'Sarabun',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.2s;box-shadow:0 3px 12px rgba(245,217,126,0.18);}
+.btn-join:hover{transform:translateY(-1px);}
+.btn-join.running{background:linear-gradient(135deg,#ef4444,#dc2626);color:white;box-shadow:0 3px 12px rgba(239,68,68,0.25);}
+.timer{font-family:'Orbitron',monospace;font-size:0.95rem;color:var(--gold);font-weight:700;background:rgba(245,217,126,0.09);padding:5px 13px;border-radius:18px;border:1px solid rgba(245,217,126,0.2);letter-spacing:2px;min-width:90px;text-align:center;}
+.btn-sm{padding:6px 14px;border-radius:22px;font-family:'Sarabun',sans-serif;font-size:0.83rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;border:1.5px solid;}
+.btn-goal{background:rgba(34,197,94,0.09);border-color:rgba(34,197,94,0.32);color:#4ade80;}
+.btn-goal:hover{background:rgba(34,197,94,0.18);}
+.btn-share{background:rgba(26,86,219,0.1);border-color:#1a56db;color:#60a5fa;}
+.btn-share:hover{background:rgba(26,86,219,0.2);}
+
+/* SCENE */
+.scene-wrap{border-radius:15px;overflow:hidden;border:1px solid var(--border);box-shadow:0 18px 55px rgba(0,0,0,0.5);position:relative;background:#0d2040;height:255px;}
+.scene-wrap.live{box-shadow:0 0 0 2px rgba(245,217,126,0.32),0 18px 55px rgba(0,0,0,0.5);}
+#scene{position:absolute;top:0;left:0;width:100%;height:100%;}
+#train-wrap{position:absolute;transition:left 2.5s cubic-bezier(0.4,0,0.2,1);/* bottom set by updateTrain() */}
+
+/* Station sign — black box style */
+.stn-sign{position:absolute;background:rgba(19, 49, 114, 0.75);border-radius:5px;padding:2px 9px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.88);white-space:nowrap;transform:translateX(-50%);pointer-events:none;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.09);}
+.stn-line{position:absolute;width:1.5px;background:repeating-linear-gradient(to top,rgba(245,217,126,0.55) 0,rgba(245,217,126,0.55) 4px,transparent 4px,transparent 8px);transform:translateX(-50%);pointer-events:none;}
+.track-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid rgba(5,5,5,0.8);transform:translateX(-50%);pointer-events:none;z-index:2;}
+.friend-pip{width:27px;height:27px;border-radius:50%;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:0.9rem;background:#1a2035;animation:fbob 2s ease-in-out infinite;}
+.friend-pip.idle{border-color:#94a3b8;animation:none;opacity:0.55;}
+@keyframes fbob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.05)}}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px;margin-top:11px;}
+.card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:11px;padding:10px 12px;transition:border-color 0.2s;}
+.card:hover{border-color:rgba(245,217,126,0.22);}
+.card .ci{font-size:1.15rem;}.card .cn{font-size:0.81rem;font-weight:700;color:var(--gold);margin:3px 0 1px;}.card .cd{font-size:0.72rem;color:var(--muted);line-height:1.4;}
+
+/* Ranking */
+.rank-sec{margin-top:16px;}
+.rank-hdr{display:grid;grid-template-columns:50px 1fr 85px 130px 105px;background:rgba(26,86,219,0.16);border:1px solid rgba(26,86,219,0.32);border-radius:10px 10px 0 0;padding:8px 13px;font-size:0.81rem;font-weight:700;color:#93c5fd;gap:8px;align-items:center;}
+.rank-row{display:grid;grid-template-columns:50px 1fr 85px 130px 105px;padding:8px 13px;border-bottom:1px solid var(--border);font-size:0.84rem;gap:8px;align-items:center;background:rgba(255,255,255,0.02);transition:background 0.2s;}
+.rank-row:hover{background:rgba(255,255,255,0.05);}
+.rank-row:last-child{border-radius:0 0 10px 10px;border-bottom:1px solid rgba(26,86,219,0.28);}
+.rn{font-family:'Orbitron',monospace;font-weight:700;font-size:0.9rem;}
+.r1{color:#fbbf24}.r2{color:#94a3b8}.r3{color:#cd7f32}
+.ucell{display:flex;align-items:center;gap:8px;}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;border:2px solid transparent;position:relative;flex-shrink:0;background:rgba(255,255,255,0.07);}
+.av.on{border-color:var(--green)}.av.me{border-color:var(--gold);box-shadow:0 0 8px rgba(245,217,126,0.28);}
+.av.ab{animation:avb 1.8s ease-in-out infinite;}
+@keyframes avb{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.sdot{position:absolute;bottom:-2px;right:-2px;width:8px;height:8px;border-radius:50%;border:2px solid var(--bg);}
+.sdot.a{background:var(--green);animation:pd 2s infinite;}.sdot.i{background:#94a3b8;}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:0.4}}
+.uname{font-weight:600;font-size:0.86rem;}.uname.me{color:var(--gold);}
+.hcell{font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--gold);font-weight:700;}
+.gbar{display:flex;align-items:center;gap:6px;}
+.gtrack{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+.gfill{height:100%;background:linear-gradient(90deg,#22c55e,#84cc16);border-radius:3px;transition:width 1s ease;}
+.gpct{font-size:0.72rem;color:var(--muted);min-width:28px;}
+.sbadge{font-size:0.72rem;padding:2px 8px;border-radius:11px;font-weight:600;display:inline-flex;align-items:center;gap:3px;}
+.sbadge.a{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.22);}
+.sbadge.i{background:rgba(148,163,184,0.07);color:#94a3b8;border:1px solid rgba(148,163,184,0.16);}
+
+/* MODALS */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:300;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.mo.show{opacity:1;pointer-events:all;}
+.md{background:#1a2035;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;width:90%;max-width:410px;box-shadow:0 30px 80px rgba(0,0,0,0.6);transform:translateY(14px);transition:transform 0.2s;}
+.mo.show .md{transform:translateY(0);}
+.mh{font-size:1.02rem;font-weight:700;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.mc{background:none;border:none;color:var(--muted);font-size:1.15rem;cursor:pointer;}
+.mc:hover{color:var(--text);}
+
+/* Goal modal */
+.gtabs{display:flex;gap:7px;margin-bottom:16px;}
+.gtab{flex:1;padding:8px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'Sarabun',sans-serif;font-size:0.84rem;cursor:pointer;transition:all 0.2s;text-align:center;font-weight:600;}
+.gtab.active{border-color:var(--green);color:#4ade80;background:rgba(34,197,94,0.09);}
+.gsec{display:none;}.gsec.show{display:block;}
+.ghgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;}
+.ghbtn{padding:9px;border-radius:9px;border:1.5px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text);font-family:'Orbitron',monospace;font-size:0.88rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+.ghbtn:hover{border-color:var(--gold);color:var(--gold);}
+.ghbtn.sel{border-color:var(--gold);background:rgba(245,217,126,0.1);color:var(--gold);}
+.gcustom{display:flex;gap:8px;align-items:center;}
+.gcustom input{flex:1;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'Orbitron',monospace;font-size:0.95rem;outline:none;}
+.gcustom input:focus{border-color:var(--gold);}
+.gcustom span{color:var(--muted);font-size:0.83rem;}
+.cplist{display:flex;flex-direction:column;gap:7px;max-height:195px;overflow-y:auto;padding-right:3px;}
+.cpitem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;border:1.5px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.2s;}
+.cpitem:hover{border-color:var(--gold);}
+.cpitem.sel{border-color:var(--green);background:rgba(34,197,94,0.07);}
+.cppct{margin-left:auto;font-size:0.74rem;color:var(--muted);font-family:'Orbitron',monospace;}
+.btn-confirm{width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border:none;padding:10px;border-radius:11px;font-family:'Sarabun',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:14px;}
+.btn-confirm:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(34,197,94,0.22);}
+
+/* Share modal */
+.sopts{display:flex;flex-direction:column;gap:8px;}
+.sopt{display:flex;align-items:center;gap:11px;padding:12px;border:1.5px solid var(--border);border-radius:11px;cursor:pointer;transition:all 0.2s;}
+.sopt:hover,.sopt.sel{border-color:var(--gold);background:rgba(245,217,126,0.06);}
+.sopt-icon{font-size:1.35rem;}
+.sopt-title{font-weight:700;font-size:0.86rem;}
+.sopt-desc{font-size:0.74rem;color:var(--muted);}
+.slink-box{background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-family:'Orbitron',monospace;font-size:0.76rem;color:var(--gold);margin-top:11px;word-break:break-all;display:flex;align-items:center;justify-content:space-between;gap:7px;}
+.copy-btn{background:rgba(245,217,126,0.1);border:1px solid rgba(245,217,126,0.22);color:var(--gold);padding:3px 10px;border-radius:7px;font-size:0.74rem;cursor:pointer;white-space:nowrap;transition:background 0.2s;}
+.copy-btn:hover{background:rgba(245,217,126,0.2);}
+.copy-btn.copied{color:var(--green);border-color:var(--green);}
+.code-big{text-align:center;font-family:'Orbitron',monospace;font-size:1.9rem;color:var(--gold);letter-spacing:8px;font-weight:700;padding:7px 0;}
+.or-div{text-align:center;color:var(--muted);font-size:0.78rem;margin:9px 0;}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(18px);background:#1a2035;border:1px solid rgba(245,217,126,0.28);color:var(--gold);padding:9px 20px;border-radius:28px;font-size:0.86rem;font-weight:600;z-index:500;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:600px){
+  .rank-hdr,.rank-row{grid-template-columns:36px 1fr 62px 75px 78px;font-size:0.74rem;padding:7px 8px;}
+  .main{padding:10px 12px;}
+  .header{padding:9px 13px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ========== LOGIN ========== -->
+<div id="login-page">
+  <div class="login-bg"></div>
+  <div class="login-track"></div>
+  <div class="login-rails"></div>
+  <div class="login-train-anim">
+    <svg width="88" height="31" viewBox="0 0 88 31">
+      <rect x="0" y="3" width="55" height="21" rx="4" fill="#c0392b" opacity="0.65"/>
+      <rect x="4" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.45"/>
+      <rect x="16" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.45"/>
+      <rect x="28" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.45"/>
+      <rect x="55" y="5" width="20" height="19" rx="3" fill="#922b21" opacity="0.65"/>
+      <circle cx="13" cy="26" r="4" fill="#333" opacity="0.55"/>
+      <circle cx="44" cy="26" r="4" fill="#333" opacity="0.55"/>
+      <circle cx="67" cy="26" r="3.5" fill="#333" opacity="0.55"/>
+    </svg>
+  </div>
+  <div class="login-card">
+    <div class="login-logo">Tr🚂ckracing</div>
+    <div class="login-tagline">จับเวลาอ่านหนังสือกับเพื่อน<br>ไปด้วยกันบนเส้นทางรถไฟ 🌲</div>
+
+    <button class="btn-google" onclick="loginGoogle()">
+      <div class="g-icon"></div>เข้าสู่ระบบด้วย Google
+    </button>
+
+    <div class="divider">หรือ</div>
+
+    <div id="lform">
+      <div class="inp-group"><label>อีเมล</label><input class="inp" type="email" id="lemail" placeholder="you@example.com"></div>
+      <div class="inp-group"><label>รหัสผ่าน</label><input class="inp" type="password" id="lpw" placeholder="••••••••"></div>
+      <button class="btn-primary" onclick="loginEmail()">เข้าสู่ระบบ</button>
+    </div>
+    <div id="rform" style="display:none">
+      <div class="inp-group"><label>ชื่อที่แสดง</label><input class="inp" type="text" id="rname" placeholder="ชื่อของคุณ"></div>
+      <div class="inp-group"><label>อีเมล</label><input class="inp" type="email" id="remail" placeholder="you@example.com"></div>
+      <div class="inp-group"><label>รหัสผ่าน</label><input class="inp" type="password" id="rpw" placeholder="••••••••"></div>
+      <button class="btn-primary" onclick="register()">สมัครสมาชิก</button>
+    </div>
+    <div class="auth-toggle" id="atog">ยังไม่มีบัญชี? <a onclick="toggleAuth()">สมัครสมาชิก</a></div>
+  </div>
+</div>
+
+<!-- ========== APP ========== -->
+<div id="app-page">
+  <div class="header">
+    <div class="logo">Tr🚂ckracing</div>
+    <div class="hdr-right">
+      <div class="badge" id="date-d">--</div>
+      <div class="badge" id="time-d">--:--</div>
+      <div class="user-pill" onclick="logout()" title="ออกจากระบบ">
+        <span id="upill-em">🌟</span><span id="upill-nm">You</span><span style="color:var(--muted);font-size:0.72rem;margin-left:2px">↩</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="selRoute(0)">🌲 สายเหนือ</button>
+    <button class="tab-btn" onclick="selRoute(1)">🌾 สายอีสาน</button>
+    <button class="tab-btn" onclick="selRoute(2)">🌊 สายใต้</button>
+    <button class="tab-btn" onclick="selRoute(3)">🛒 สายแม่กลอง</button>
+  </div>
+
+  <div class="main">
+    <div class="info-bar">
+      <div class="route-ttl" id="rttl">สายเหนือ — กรุงเทพ → เชียงใหม่ <span>~750 กม.</span></div>
+      <button class="btn-join" id="join-btn" onclick="toggleSession()">▶ join track</button>
+      <div class="timer" id="timer">00:00:00</div>
+      <button class="btn-sm btn-goal" onclick="openGoal()">🎯 <span id="glabel">ตั้ง Goal</span></button>
+      <button class="btn-sm btn-share" onclick="openShare()">🔗 share track</button>
+    </div>
+
+    <div class="scene-wrap" id="sw">
+      <canvas id="scene"></canvas>
+      <div id="train-wrap" style="left:4%">
+        <svg width="76" height="32" viewBox="0 0 76 32">
+          <rect x="0" y="3" width="54" height="21" rx="4" fill="#c0392b"/>
+          <rect x="4" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.9"/>
+          <rect x="16" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.9"/>
+          <rect x="28" y="6" width="10" height="8" rx="1" fill="#aee6f7" opacity="0.9"/>
+          <rect x="54" y="5" width="18" height="18" rx="3" fill="#922b21"/>
+          <rect x="56" y="8" width="7" height="6" rx="1" fill="#aee6f7" opacity="0.7"/>
+          <rect x="64" y="8" width="5" height="6" rx="1" fill="#aee6f7" opacity="0.7"/>
+          <circle cx="11" cy="26" r="5" fill="#222"/><circle cx="11" cy="26" r="2.5" fill="#555"/>
+          <circle cx="42" cy="26" r="5" fill="#222"/><circle cx="42" cy="26" r="2.5" fill="#555"/>
+          <circle cx="64" cy="26" r="4" fill="#222"/><circle cx="64" cy="26" r="2" fill="#555"/>
+          <ellipse cx="2" cy="1" rx="4" ry="2.5" fill="rgba(255,255,255,0.16)"/>
+        </svg>
+      </div>
+      <div id="fl"></div>
+      <div id="sl"></div>
+    </div>
+
+    <div class="cards" id="cards"></div>
+
+    <div class="rank-sec">
+      <div class="rank-hdr"><div>#</div><div>User</div><div>hr.📚</div><div>Goal🎯</div><div>Status</div></div>
+      <div id="rank-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Goal Modal -->
+<div class="mo" id="goal-mo">
+  <div class="md">
+    <div class="mh">🎯 ตั้ง Goal <button class="mc" onclick="closeGoal()">✕</button></div>
+    <div class="gtabs">
+      <button class="gtab active" id="gt-h" onclick="setGTab('h')">⏰ ชั่วโมง/วัน</button>
+      <button class="gtab" id="gt-c" onclick="setGTab('c')">📍 Checkpoint</button>
+    </div>
+    <div class="gsec show" id="gs-h">
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:10px">เลือกเป้าหมายชั่วโมงที่จะอ่านต่อวัน</div>
+      <div class="ghgrid">
+        <button class="ghbtn" onclick="pickHr(1,this)">1h</button>
+        <button class="ghbtn" onclick="pickHr(2,this)">2h</button>
+        <button class="ghbtn" onclick="pickHr(3,this)">3h</button>
+        <button class="ghbtn" onclick="pickHr(4,this)">4h</button>
+        <button class="ghbtn" onclick="pickHr(6,this)">6h</button>
+        <button class="ghbtn" onclick="pickHr(8,this)">8h</button>
+        <button class="ghbtn" onclick="pickHr(10,this)">10h</button>
+        <button class="ghbtn" id="cust-btn" onclick="pickHr(0,this)">กำหนดเอง</button>
+      </div>
+      <div class="gcustom" id="cust-row" style="display:none">
+        <input type="number" min="0.5" max="24" step="0.5" id="cust-inp" placeholder="0">
+        <span>ชั่วโมง</span>
+      </div>
+      <button class="btn-confirm" onclick="confirmGoal()">บันทึก Goal ✓</button>
+    </div>
+    <div class="gsec" id="gs-c">
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:10px">เลือกสถานีที่ต้องการเป็น goal</div>
+      <div class="cplist" id="cplist"></div>
+      <button class="btn-confirm" onclick="confirmGoal()">บันทึก Goal ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Share Modal -->
+<div class="mo" id="share-mo">
+  <div class="md">
+    <div class="mh">🔗 Share Track <button class="mc" onclick="closeShare()">✕</button></div>
+    <div class="sopts">
+      <div class="sopt sel" id="sopt-l" onclick="setShare('l')">
+        <div class="sopt-icon">🔗</div>
+        <div><div class="sopt-title">Invite Link</div><div class="sopt-desc">ใครที่มีลิงก์เข้าร่วมได้เลย</div></div>
+      </div>
+      <div class="sopt" id="sopt-c" onclick="setShare('c')">
+        <div class="sopt-icon">🔒</div>
+        <div><div class="sopt-title">Private Code</div><div class="sopt-desc">รหัส 6 หลัก เฉพาะคนที่คุณแชร์</div></div>
+      </div>
+    </div>
+    <div id="share-l" style="margin-top:12px">
+      <div class="slink-box">
+        <span id="share-url">trackracing.app/join/NORTH-X7K2Q</span>
+        <button class="copy-btn" id="copy-btn" onclick="copyLink()">คัดลอก</button>
+      </div>
+    </div>
+    <div id="share-c" style="display:none;margin-top:12px">
+      <div style="font-size:0.78rem;color:var(--muted);text-align:center;margin-bottom:7px">รหัสเข้าร่วม track ของคุณ</div>
+      <div class="code-big">X7K2Q9</div>
+      <div class="or-div">— หรือให้เพื่อนกรอกรหัส —</div>
+      <input class="inp" placeholder="X X X X X X" maxlength="8" style="text-align:center;font-family:'Orbitron',monospace;font-size:1.05rem;letter-spacing:6px">
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ======= DATA =======
+const ROUTES = [
+  {id:'n',name:'สายเหนือ — กรุงเทพ → เชียงใหม่',sub:'~750 กม.',type:'mtn',
+   stops:[{l:'กรุงเทพฯ',p:3,e:'🏙️'},{l:'อยุธยา',p:20,e:'🏛️'},{l:'พิษณุโลก',p:44,e:'🌅'},{l:'ลำปาง',p:69,e:'⛰️'},{l:'เชียงใหม่',p:96,e:'🌿'}],
+   cards:[{e:'🏛️',n:'อยุธยา',d:'โบราณสถาน วิวยามเย็น'},{e:'🌅',n:'พิษณุโลก',d:'ทุ่งนาเขียว แสงเช้า'},{e:'🌁',n:'ลำปาง→เชียงใหม่',d:'หมอกเช้า เขาสลับซับซ้อน'},{e:'🌿',n:'เชียงใหม่',d:'ดอย ธรรมชาติ'}],
+   sky:['#1a2a4a','#3a6a4a']},
+  {id:'e',name:'สายอีสาน — โคราช → ขอนแก่น',sub:'ที่ราบสูง ทุ่งกว้าง',type:'flat',
+   stops:[{l:'โคราช',p:3,e:'🏙️'},{l:'บุรีรัมย์',p:30,e:'🌾'},{l:'สุรินทร์',p:55,e:'🐘'},{l:'ขอนแก่น',p:96,e:'🌅'}],
+   cards:[{e:'🌾',n:'ทุ่งโคราช',d:'ไร่อ้อย เส้นขอบฟ้ายาว'},{e:'🌅',n:'พระอาทิตย์ตก',d:'ท้องฟ้าสีทอง'},{e:'🏕️',n:'ชุมชนอีสาน',d:'วิถีชีวิตชนบท'}],
+   sky:['#0d1b3e','#c8651a']},
+  {id:'s',name:'สายใต้ — หัวหิน → ชุมพร',sub:'ทะเล ป่ามะพร้าว',type:'sea',
+   stops:[{l:'หัวหิน',p:3,e:'🌊'},{l:'ประจวบฯ',p:38,e:'🍍'},{l:'บางสะพาน',p:67,e:'🥥'},{l:'ชุมพร',p:96,e:'🌴'}],
+   cards:[{e:'🌊',n:'หัวหิน',d:'ทะเลอ่าวไทย'},{e:'🍍',n:'ประจวบฯ',d:'ไร่สับปะรดยาว'},{e:'🥥',n:'บางสะพาน',d:'สวนมะพร้าว ทะเลมรกต'}],
+   sky:['#0a1a3a','#2a9aba']},
+  {id:'m',name:'สายแม่กลอง — สมุทรสาคร → สมุทรสงคราม',sub:'รถไฟลอดตลาด',type:'mkt',
+   stops:[{l:'สมุทรสาคร',p:3,e:'🚢'},{l:'ตลาดร่มหุบ',p:50,e:'🛒'},{l:'แม่กลอง',p:96,e:'🌅'}],
+   cards:[{e:'🛒',n:'ตลาดร่มหุบ',d:'ร้านค้าบนทางรถไฟ!'},{e:'🚢',n:'สมุทรสาคร',d:'ท่าเรือ ชุมชนชายฝั่ง'},{e:'🌊',n:'สมุทรสงคราม',d:'ตลาดน้ำอัมพวา'}],
+   sky:['#2a1a0a','#aa6a2a']}
+];
+
+const FRIENDS = [
+  {n:'น้องมิ้นท์',e:'🐱',on:true, p:.28,h:2.5,gp:42,gh:6},
+  {n:'พี่โบว์',   e:'🐻',on:true, p:.55,h:3.1,gp:62,gh:5},
+  {n:'นายอาร์ม', e:'🦊',on:false,p:.70,h:4.8,gp:96,gh:5},
+  {n:'คุณเนย',   e:'🐼',on:false,p:.12,h:0.8,gp:16,gh:5},
+];
+
+// State
+let curRoute=0, active=false, secs=0, tiv=null, tpct=.04;
+let shareT='l', gTab='h', gHrs=0, gCpPct=0, selHr=0, selCpIdx=-1;
+let user=null, regMode=false;
+
+// Clock
+function tick(){
+  const n=new Date();
+  document.getElementById('date-d').textContent=n.toLocaleDateString('th-TH',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('time-d').textContent=n.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+tick(); setInterval(tick,1000);
+
+// Auth
+function loginGoogle(){go('นักอ่านสาย G','🌟');}
+function loginEmail(){const e=document.getElementById('lemail').value.trim();if(!e){toast('กรุณากรอกอีเมล');return;}go(e.split('@')[0],'📚');}
+function register(){const n=document.getElementById('rname').value.trim();if(!n){toast('กรุณากรอกชื่อ');return;}go(n,'✨');}
+function toggleAuth(){
+  regMode=!regMode;
+  document.getElementById('lform').style.display=regMode?'none':'block';
+  document.getElementById('rform').style.display=regMode?'block':'none';
+  document.getElementById('atog').innerHTML=regMode?'มีบัญชีแล้ว? <a onclick="toggleAuth()">เข้าสู่ระบบ</a>':'ยังไม่มีบัญชี? <a onclick="toggleAuth()">สมัครสมาชิก</a>';
+}
+function go(name,emoji){
+  user={name,emoji};
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app-page').style.display='block';
+  document.getElementById('upill-nm').textContent=name;
+  document.getElementById('upill-em').textContent=emoji;
+  selRoute(0); renderFriends(); renderRank();
+  setTimeout(updateTrain, 50); // after DOM paint
+  toast('ยินดีต้อนรับ '+name+' 🎉');
+}
+function logout(){
+  document.getElementById('app-page').style.display='none';
+  document.getElementById('login-page').style.display='flex';
+  if(active) toggleSession();
+  secs=0; tpct=.04;
+  document.getElementById('timer').textContent='00:00:00';
+  updateTrain();
+}
+
+// Route
+function selRoute(i){
+  curRoute=i;
+  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+  const r=ROUTES[i];
+  document.getElementById('rttl').innerHTML=`${r.name} <span>${r.sub}</span>`;
+  drawScene(i); drawStops(i); drawCards(i); buildCpList();
+  // Position train on rail after scene is drawn
+  updateTrain();
+}
+
+// Scene
+function drawScene(i){
+  const r=ROUTES[i], c=document.getElementById('scene');
+  const sw=document.getElementById('sw');
+  c.width=sw.offsetWidth||900; c.height=sw.offsetHeight||255;
+  const W=c.width, H=c.height, ctx=c.getContext('2d');
+  const sg=ctx.createLinearGradient(0,0,0,H*.75);
+  sg.addColorStop(0,r.sky[0]); sg.addColorStop(1,r.sky[1]);
+  ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
+  if(r.type==='mtn') drawMtn(ctx,W,H);
+  else if(r.type==='flat') drawFlat(ctx,W,H);
+  else if(r.type==='sea') drawSea(ctx,W,H);
+  else if(r.type==='mkt') drawMkt(ctx,W,H);
+  // ground
+  const gg=ctx.createLinearGradient(0,H*.72,0,H);
+  const gc=r.type==='flat'?['#a0722a','#6a4a1a']:r.type==='sea'?['#1a4a1a','#0e2e0e']:r.type==='mkt'?['#2a1a0a','#1a0e05']:['#2a5a2a','#1a3a1a'];
+  gg.addColorStop(0,gc[0]); gg.addColorStop(1,gc[1]);
+  ctx.fillStyle=gg; ctx.fillRect(0,H*.72,W,H);
+  const ry=H*.795;
+  ctx.strokeStyle='#888'; ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(0,ry);ctx.lineTo(W,ry);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,ry+7);ctx.lineTo(W,ry+7);ctx.stroke();
+  ctx.strokeStyle='#5a4a3a'; ctx.lineWidth=4;
+  for(let x=30;x<W;x+=58){ctx.beginPath();ctx.moveTo(x,ry-4);ctx.lineTo(x,ry+11);ctx.stroke();}
+}
+function drawMtn(ctx,W,H){
+  for(let i=0;i<22;i++){ctx.fillStyle='rgba(255,255,255,0.5)';ctx.beginPath();ctx.arc(Math.random()*W,Math.random()*(H*.36),Math.random()*1.3,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='#1a3a2a';ctx.beginPath();ctx.moveTo(0,H*.7);
+  for(let i=0;i<=10;i++)ctx.lineTo(W/10*i,i%2?H*.58:H*.3);
+  ctx.lineTo(W,H*.7);ctx.fill();
+  ctx.fillStyle='#2a5a2a';ctx.beginPath();ctx.moveTo(0,H*.75);
+  for(let i=0;i<=14;i++)ctx.lineTo(W/14*i,i%2?H*.63:H*.39);
+  ctx.lineTo(W,H*.75);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.04)';
+  ctx.beginPath();ctx.ellipse(W*.28,H*.53,W*.2,15,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(W*.7,H*.49,W*.18,13,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(245,240,160,0.1)';ctx.beginPath();ctx.arc(W*.88,42,25,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a2a4a';ctx.beginPath();ctx.arc(W*.88-6,38,25,0,Math.PI*2);ctx.fill();
+}
+function drawFlat(ctx,W,H){
+  const sx=W*.82,sy=H*.63;
+  const g=ctx.createRadialGradient(sx,sy,5,sx,sy,120);
+  g.addColorStop(0,'rgba(255,200,60,.26)');g.addColorStop(1,'rgba(255,120,0,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(sx,sy,120,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,255,160,.88)';ctx.beginPath();ctx.arc(sx,sy,20,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(25,12,0,.62)';
+  for(let x=110;x<W*.7;x+=62){ctx.beginPath();ctx.arc(x,H*.63,11,0,Math.PI*2);ctx.fill();ctx.fillRect(x-3,H*.63,6,20);}
+  ctx.strokeStyle='rgba(80,80,80,.38)';ctx.lineWidth=1.5;
+  for(let x=70;x<W;x+=155){ctx.beginPath();ctx.moveTo(x,H*.57);ctx.lineTo(x,H*.78);ctx.stroke();}
+  ctx.beginPath();ctx.moveTo(0,H*.59);ctx.lineTo(W,H*.59);ctx.stroke();
+}
+function drawSea(ctx,W,H){
+  const sg=ctx.createLinearGradient(0,H*.53,0,H*.74);
+  sg.addColorStop(0,'#1a7aaa');sg.addColorStop(1,'#0a4a6a');
+  ctx.fillStyle=sg;ctx.fillRect(0,H*.53,W,H*.21);
+  ctx.strokeStyle='rgba(255,255,255,.16)';ctx.lineWidth=1;
+  for(let x=0;x<W;x+=82){ctx.beginPath();ctx.moveTo(x,H*.59);ctx.lineTo(x+45,H*.59);ctx.stroke();}
+  [.09,.2,.75,.88].forEach(px=>{
+    const tx=W*px,ty=H*.73;
+    ctx.strokeStyle='#5a3a1a';ctx.lineWidth=5;
+    ctx.beginPath();ctx.moveTo(tx,ty);ctx.quadraticCurveTo(tx+8,ty-38,tx+4,ty-65);ctx.stroke();
+    ctx.strokeStyle='#2a6a1a';ctx.lineWidth=6;
+    for(let a=-55;a<=55;a+=28){const rd=a*Math.PI/180;ctx.beginPath();ctx.moveTo(tx+4,ty-65);ctx.lineTo(tx+4+Math.sin(rd)*32,ty-65-Math.cos(rd)*9);ctx.stroke();}
+  });
+}
+function drawMkt(ctx,W,H){
+  const cs=['#5a3a1a','#6a4a2a','#7a5a3a','#4a2a0a'];
+  for(let x=0;x<W;x+=50){
+    const h=62+((x*7)%28);
+    ctx.fillStyle=cs[Math.floor(x/50)%cs.length];
+    ctx.fillRect(x,H*.52-h,48,h+H*.2);
+    ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(x,H*.52-h,48,4);
+    ctx.fillStyle='rgba(245,217,126,.6)';
+    for(let wy=H*.52-h+9;wy<H*.52-4;wy+=16)for(let wx=x+5;wx<x+43;wx+=13)ctx.fillRect(wx,wy,7,6);
+  }
+  const sc=['#e74c3c','#27ae60','#f39c12','#9b59b6','#3498db'];
+  for(let x=0;x<W;x+=29){
+    ctx.fillStyle=sc[Math.floor(x/29)%sc.length];ctx.globalAlpha=.8;
+    ctx.fillRect(x,H*.70,26,14);ctx.globalAlpha=1;
+  }
+}
+
+// Stops — black box labels
+function drawStops(i){
+  const r=ROUTES[i], sw=document.getElementById('sw'), sl=document.getElementById('sl');
+  sl.innerHTML='';
+  const W=sw.offsetWidth||900, H=sw.offsetHeight||255, ry=H*.795;
+  r.stops.forEach(s=>{
+    const x=s.p/100*W;
+    const line=document.createElement('div');
+    line.className='stn-line';
+    line.style.cssText=`left:${x}px;bottom:${H-ry+3}px;height:44px;`;
+    sl.appendChild(line);
+    const sign=document.createElement('div');
+    sign.className='stn-sign';
+    sign.style.cssText=`left:${x}px;bottom:${H-ry+46}px;`;
+    sign.textContent=`${s.e} ${s.l}`;
+    sl.appendChild(sign);
+    const dot=document.createElement('div');
+    dot.className='track-dot';
+    dot.style.cssText=`left:${x}px;bottom:${H-ry-10}px;`;
+    sl.appendChild(dot);
+  });
+  drawGoalMarker();
+}
+
+function drawGoalMarker(){
+  const old=document.getElementById('gmk');if(old)old.remove();
+  if(!gCpPct) return;
+  const sw=document.getElementById('sw'), sl=document.getElementById('sl');
+  const W=sw.offsetWidth||900, H=sw.offsetHeight||255, ry=H*.795;
+  const x=gCpPct*W;
+  const el=document.createElement('div');
+  el.id='gmk';
+  el.style.cssText=`position:absolute;left:${x}px;bottom:${H-ry-22}px;width:26px;height:26px;transform:translateX(-50%);background:rgba(245,217,126,0.12);border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;z-index:5;box-shadow:0 0 12px rgba(245,217,126,.38);`;
+  el.textContent='🏁';
+  sl.appendChild(el);
+}
+
+// Friends
+function renderFriends(){
+  const sw=document.getElementById('sw'), fl=document.getElementById('fl');
+  fl.innerHTML='';
+  const W=sw.offsetWidth||900, H=sw.offsetHeight||255, ry=H*.795;
+  FRIENDS.forEach(f=>{
+    const x=f.p*W;
+    const w=document.createElement('div');
+    w.style.cssText=`position:absolute;left:${x}px;bottom:${H-ry+3}px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;`;
+    const pip=document.createElement('div');
+    pip.className='friend-pip'+(f.on?'':' idle');
+    pip.textContent=f.e; pip.title=f.n;
+    pip.style.animationDelay=`${(f.p*2.5).toFixed(1)}s`;
+    const nt=document.createElement('div');
+    nt.style.cssText='font-size:9px;color:rgba(255,255,255,.62);background:rgba(0,0,0,.5);padding:1px 5px;border-radius:4px;white-space:nowrap;';
+    nt.textContent=f.n;
+    w.appendChild(pip); w.appendChild(nt); fl.appendChild(w);
+  });
+}
+
+// Cards
+function drawCards(i){
+  const r=ROUTES[i];
+  document.getElementById('cards').innerHTML=r.cards.map(c=>`<div class="card"><div class="ci">${c.e}</div><div class="cn">${c.n}</div><div class="cd">${c.d}</div></div>`).join('');
+}
+
+// Ranking
+function renderRank(){
+  const me={n:user?.name||'ฉัน',e:user?.emoji||'🌟',on:active,p:tpct,h:secs/3600,
+    gp: gHrs>0?Math.min(100,Math.round(secs/3600/gHrs*100)):gCpPct>0?Math.min(100,Math.round(tpct/gCpPct*100)):0,
+    isMe:true};
+  const all=[...FRIENDS,me].sort((a,b)=>b.h-a.h);
+  const md=['🥇','🥈','🥉'];
+  document.getElementById('rank-body').innerHTML=all.map((u,i)=>`
+    <div class="rank-row">
+      <div class="rn ${i<3?'r'+(i+1):''}">${md[i]||'#'+(i+1)}</div>
+      <div class="ucell"><div class="av${u.on?' on':''}${u.isMe?' me':''}${u.on?' ab':''}">${u.e}<div class="sdot ${u.on?'a':'i'}"></div></div><span class="uname${u.isMe?' me':''}">${u.n}</span></div>
+      <div class="hcell">${u.h.toFixed(1)}h</div>
+      <div class="gbar"><div class="gtrack"><div class="gfill" style="width:${u.gp}%"></div></div><span class="gpct">${u.gp}%</span></div>
+      <div><span class="sbadge ${u.on?'a':'i'}">${u.on?'🟢 กำลังอ่าน':'💤 ออฟไลน์'}</span></div>
+    </div>`).join('');
+}
+
+// Session
+function toggleSession(){
+  const btn=document.getElementById('join-btn'), sw=document.getElementById('sw');
+  if(!active){
+    active=true; btn.textContent='⏹ stop'; btn.classList.add('running'); sw.classList.add('live');
+    tiv=setInterval(()=>{secs++;updTimer();tpct=Math.min(.95,tpct+.00013);updateTrain();if(secs%30===0)renderRank();},1000);
+  } else {
+    active=false; btn.textContent='▶ join track'; btn.classList.remove('running'); sw.classList.remove('live');
+    clearInterval(tiv); renderRank();
+  }
+}
+function updTimer(){const h=Math.floor(secs/3600),m=Math.floor(secs%3600/60),s=secs%60;document.getElementById('timer').textContent=`${p(h)}:${p(m)}:${p(s)}`;}
+function p(n){return String(n).padStart(2,'0');}
+function updateTrain(){
+  const sw=document.getElementById('sw');
+  const W=sw.offsetWidth||900, H=sw.offsetHeight||255;
+  const ry=H*.795; // rail top Y from top of container
+  // train SVG height=32, wheels sit at y=26-31, so bottom of SVG ~6px below rail center
+  const trainBottom = H - ry - 6; // px from bottom of container
+  const tw=document.getElementById('train-wrap');
+  tw.style.left=tpct*W+'px';
+  tw.style.bottom=trainBottom+'px';
+  tw.style.top='auto';
+}
+
+// Goal
+function openGoal(){document.getElementById('goal-mo').classList.add('show');buildCpList();}
+function closeGoal(){document.getElementById('goal-mo').classList.remove('show');}
+function setGTab(t){
+  gTab=t;
+  document.getElementById('gt-h').classList.toggle('active',t==='h');
+  document.getElementById('gt-c').classList.toggle('active',t==='c');
+  document.getElementById('gs-h').classList.toggle('show',t==='h');
+  document.getElementById('gs-c').classList.toggle('show',t==='c');
+}
+function pickHr(h,el){
+  selHr=h;
+  document.querySelectorAll('.ghbtn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('cust-row').style.display=h===0?'flex':'none';
+}
+function buildCpList(){
+  const r=ROUTES[curRoute];
+  document.getElementById('cplist').innerHTML=r.stops.map((s,i)=>`
+    <div class="cpitem${selCpIdx===i?' sel':''}" onclick="selCp(${i})">
+      <span>${s.e}</span><span style="font-weight:600;font-size:.88rem">${s.l}</span>
+      <span class="cppct">${s.p}%</span>
+    </div>`).join('');
+}
+function selCp(i){selCpIdx=i;buildCpList();}
+function confirmGoal(){
+  if(gTab==='h'){
+    let h=selHr;
+    if(h===0) h=parseFloat(document.getElementById('cust-inp').value)||0;
+    if(h<=0){toast('กรุณาเลือกหรือกรอกชั่วโมง');return;}
+    gHrs=h; gCpPct=0;
+    document.getElementById('glabel').textContent=`Goal: ${h}h/วัน`;
+    toast(`ตั้ง Goal ${h} ชั่วโมง/วัน ✓`);
+  } else {
+    if(selCpIdx<0){toast('กรุณาเลือกสถานี');return;}
+    const s=ROUTES[curRoute].stops[selCpIdx];
+    gCpPct=s.p/100; gHrs=0;
+    document.getElementById('glabel').textContent=`Goal: ${s.l}`;
+    toast(`Goal ที่ ${s.l} ✓`);
+    drawGoalMarker();
+  }
+  closeGoal(); renderRank();
+}
+
+// Share
+function openShare(){document.getElementById('share-mo').classList.add('show');}
+function closeShare(){document.getElementById('share-mo').classList.remove('show');}
+function setShare(t){
+  shareT=t;
+  document.getElementById('sopt-l').classList.toggle('sel',t==='l');
+  document.getElementById('sopt-c').classList.toggle('sel',t==='c');
+  document.getElementById('share-l').style.display=t==='l'?'block':'none';
+  document.getElementById('share-c').style.display=t==='c'?'block':'none';
+}
+function copyLink(){
+  navigator.clipboard?.writeText('https://trackracing.app/join/NORTH-X7K2Q').catch(()=>{});
+  const b=document.getElementById('copy-btn');
+  b.textContent='✓ คัดลอกแล้ว'; b.classList.add('copied');
+  setTimeout(()=>{b.textContent='คัดลอก';b.classList.remove('copied');},2e3);
+}
+
+// Close modals on backdrop
+['goal-mo','share-mo'].forEach(id=>document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');}));
+
+// Toast
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// Friends animate
+setInterval(()=>{FRIENDS.forEach(f=>{if(f.on)f.p=Math.min(.93,f.p+.001+Math.random()*.0015);});renderFriends();},3500);
+
+// Resize
+window.addEventListener('resize',()=>{if(user){selRoute(curRoute);renderFriends();updateTrain();}});
+</script>
+</body>
+</html>
