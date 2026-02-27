@@ -1,0 +1,2 @@
+- แก้ให้ navigation bar ด้านข้าง มันหุบไปได้
+- note ให้ add image ได้
