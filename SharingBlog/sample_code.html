@@ -11,6 +11,62 @@
   --gold:#f5d97e;--green:#22c55e;--red:#ef4444;--blue:#60a5fa;--text:#e8eaf6;--muted:#6b7a99;
   --sidebar:200px;
 }
+/* ── LIGHT MODE ────────────────────────────────── */
+body.light{
+  --bg:#f0f2f5;--surface:#ffffff;--surface2:#f0f2f5;--border:rgba(0,0,0,0.09);
+  --text:#1a1d23;--muted:#7a8499;--gold:#d4900a;--green:#16a34a;--red:#dc2626;--blue:#2563eb;
+}
+body.light .sidebar{background:rgba(255,255,255,0.97);border-right:1px solid rgba(0,0,0,0.09);}
+body.light .app-header{background:rgba(245,247,250,0.97);border-bottom:1px solid rgba(0,0,0,0.09);}
+body.light .badge{background:rgba(212,144,10,0.1);border-color:rgba(212,144,10,0.25);color:var(--gold);}
+body.light .nav-item:hover{background:rgba(0,0,0,0.05);}
+body.light .nav-item.active{background:rgba(212,144,10,0.1);border-color:rgba(212,144,10,0.3);}
+body.light .sidebar-user:hover{background:rgba(0,0,0,0.04);}
+body.light .sidebar-user-av{background:rgba(212,144,10,0.1);border-color:rgba(212,144,10,0.3);}
+body.light .scene-wrap{background:#b8d4f0;}
+body.light .tab-btn{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.12);color:var(--muted);}
+body.light .tab-btn.active{background:rgba(212,144,10,0.1);border-color:var(--gold);color:var(--gold);}
+body.light .card{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.09);}
+body.light .rank-hdr{background:rgba(37,99,235,0.08);border-color:rgba(37,99,235,0.2);color:#1d4ed8;}
+body.light .rank-row{background:rgba(0,0,0,0.01);}
+body.light .rank-row:hover{background:rgba(0,0,0,0.04);}
+body.light .mo .md{background:#ffffff;border-color:rgba(0,0,0,0.12);}
+body.light .gtab{border-color:rgba(0,0,0,0.1);color:var(--muted);}
+body.light .ghbtn{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.1);}
+body.light .cpitem{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.1);}
+body.light .sopt{border-color:rgba(0,0,0,0.1);}
+body.light .slink-box{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);}
+body.light .blog-card{background:#ffffff;border-color:rgba(0,0,0,0.09);}
+body.light .blog-card:hover{border-color:rgba(0,0,0,0.18);box-shadow:0 8px 24px rgba(0,0,0,0.1);}
+body.light .bc-img-ph{background:#e8ecf2;color:rgba(0,0,0,0.2);}
+body.light .ctx-menu{background:#ffffff;border-color:rgba(0,0,0,0.12);box-shadow:0 8px 24px rgba(0,0,0,0.15);}
+body.light .ctx-item{color:var(--text);}
+body.light .ctx-item:hover{background:rgba(0,0,0,0.06);}
+body.light .blog-search-inp{background:#ffffff;border-color:rgba(0,0,0,0.12);}
+body.light .bp-header{background:rgba(245,247,250,0.97);border-color:rgba(0,0,0,0.09);}
+body.light .bp-back{border-color:rgba(0,0,0,0.12);color:var(--muted);}
+body.light .bc-modal{background:#ffffff;border-color:rgba(0,0,0,0.1);}
+body.light .bc-inp{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);}
+body.light .bc-upload-zone{border-color:rgba(0,0,0,0.15);}
+body.light .find-card{background:#ffffff;border-color:rgba(0,0,0,0.09);}
+body.light .cafe-card{background:#ffffff;border-color:rgba(0,0,0,0.09);}
+body.light .stat-card{background:#ffffff;border-color:rgba(0,0,0,0.09);}
+body.light .page-wrap{background:transparent;}
+body.light .bottom-tab{background:rgba(245,247,250,0.98);border-top:1px solid rgba(0,0,0,0.09);}
+body.light .toast{background:#ffffff;border-color:rgba(212,144,10,0.3);color:var(--gold);box-shadow:0 4px 20px rgba(0,0,0,0.15);}
+body.light .mo{background:rgba(0,0,0,0.4);}
+body.light #login-page .login-card{background:rgba(255,255,255,0.97);border-color:rgba(0,0,0,0.1);}
+body.light .blog-add-card{border-color:rgba(0,0,0,0.15);color:rgba(0,0,0,0.3);}
+body.light .blog-add-card:hover{border-color:var(--gold);color:var(--gold);}
+
+/* theme toggle button */
+.theme-toggle{
+  background:none; border:1.5px solid var(--border); color:var(--muted);
+  width:34px; height:34px; border-radius:50%; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; transition:all .2s; flex-shrink:0;
+}
+.theme-toggle:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,217,126,.08);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh;overflow-x:hidden;}
 
@@ -646,6 +702,7 @@ textarea.bc-inp { resize:vertical; min-height:110px; line-height:1.7; }
     <div class="app-header">
       <div class="page-title" id="page-title">🚂 Track Racer</div>
       <div class="hdr-right">
+        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="Dark / Light mode">🌙</button>
         <div class="badge" id="date-d">--</div>
         <div class="badge" id="time-d">--:--</div>
       </div>
@@ -1508,6 +1565,16 @@ function initStatsPage(){
       <div class="bar-track"><div class="bar-fill" style="width:${r.v}%"></div></div>
       <div class="bar-val">${r.v}%</div>
     </div>`).join('');
+}
+
+// ════════════════════════════════════════
+// THEME
+// ════════════════════════════════════════
+let isDark=true;
+function toggleTheme(){
+  isDark=!isDark;
+  document.body.classList.toggle('light',!isDark);
+  document.getElementById('theme-btn').textContent=isDark?'🌙':'☀️';
 }
 
 // ════════════════════════════════════════
