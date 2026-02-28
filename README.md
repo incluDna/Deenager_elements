@@ -18,3 +18,5 @@
 | 28/12/24 | overall | [Web design(figma)✅](https://www.figma.com/design/vUyVUbrBsV791vrSh9eOJ4/Trackracing?node-id=2058-430&p=f&t=9FRQP2sQsP1sPRqg-0) 13/09/25 |
 | 20/05/25 | Find my way | [GG_Form_asks_Dek68✅](https://forms.gle/gvTSqLuR41QLN4xL6) |
 | 21/02/26 | share+pr+cafe | Dev stage 1
+| 26/02/26 | Trackracer | sample code (html) w/ satisfied ui✅
+| 28/02/26 | sharing blog | sample code (html) w/ satisfied ui✅
