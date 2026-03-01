@@ -665,10 +665,10 @@ textarea.bc-inp { resize:vertical; min-height:110px; line-height:1.7; }
 .bc-preview-img { width:100%; max-height:180px; object-fit:cover;
   border-radius:10px; display:none; margin-bottom:10px; }
 .bc-tags-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
-.bct { background:rgba(96,165,250,.08); border:1.5px solid rgba(96,165,250,.2);
+.bct, .pbct { background:rgba(96,165,250,.08); border:1.5px solid rgba(96,165,250,.2);
   color:var(--blue); padding:4px 11px; border-radius:16px;
   font-size:0.75rem; cursor:pointer; font-weight:600; transition:all .18s; }
-.bct.sel { background:rgba(96,165,250,.22); border-color:var(--blue); }
+.bct.sel, .pbct.sel { background:rgba(96,165,250,.22); border-color:var(--blue); }
 .bc-submit {
   width:100%; background:linear-gradient(135deg,#f5d97e,#ff9a3c);
   color:#1a1200; border:none; padding:11px; border-radius:12px;
@@ -1038,18 +1038,18 @@ body.light .about-dev-av { background: linear-gradient(135deg,#e8ecf5,#d0d8ea); 
     <div class="page" id="page-promo-post" style="overflow-y:auto;">
       <div class="bp-header">
         <button class="bp-back" onclick="closePromoPost()">← กลับ</button>
-        <div id="bp-own-actions" style="margin-left:auto;display:flex;gap:8px;"></div>
+        <div id="pp-own-actions" style="margin-left:auto;display:flex;gap:8px;"></div>
       </div>
       <div class="bp-content">
-        <img id="bp-cover" class="bp-cover" style="display:none" src="" alt="">
-        <div class="bp-title" id="bp-title"></div>
+        <img id="pp-cover" class="bp-cover" style="display:none" src="" alt="">
+        <div class="bp-title" id="pp-title"></div>
         <div class="bp-meta">
-          <span class="bp-meta-av" id="bp-av"></span>
-          <span class="bp-meta-author" id="bp-author"></span>
-          <span class="bp-meta-time" id="bp-time"></span>
+          <span class="bp-meta-av" id="pp-av"></span>
+          <span class="bp-meta-author" id="pp-author"></span>
+          <span class="bp-meta-time" id="pp-time"></span>
         </div>
-        <div class="bp-body" id="bp-body"></div>
-        <div class="bp-tags" id="bp-tags"></div>
+        <div class="bp-body" id="pp-body"></div>
+        <div class="bp-tags" id="pp-tags"></div>
       </div>
     </div>
 
@@ -1303,6 +1303,7 @@ function go(name,emoji){
 
   selRoute(0); renderFriends(); renderRank();
   initFindPage(); initCafePage(); initStatsPage();
+  renderBlogGrid();
   renderPromoGrid();
   setTimeout(()=>{updateTrain();updateTrainAvatar();},50);
   document.getElementById('app-footer').style.display='flex';
@@ -1319,9 +1320,9 @@ function logout(){
 // ════════════════════════════════════════
 // NAV
 // ════════════════════════════════════════
-const PAGE_TITLES={track:'🚂 Track Racer',find:'🧭 Find my way',share:'📑 Sharing Blog',cafe:'☕ Cafe',promote:'📣 Promote',stats:'📊 Stats','blog-post':'📖 Blog'};
+const PAGE_TITLES={track:'🚂 Track Racer',find:'🧭 Find my way',share:'📑 Sharing Blog',cafe:'☕ Cafe',promote:'📣 Promote',stats:'📊 Stats','blog-post':'📖 Blog','promo-post':'📣 Promote Post'};
 function setNav(page,skipBlog){
-  ['track','find','share','cafe', 'promote', 'stats','blog-post', 'promo-post'].forEach(p=>{
+  ['track','find','share','cafe','promote','stats','blog-post','promo-post'].forEach(p=>{
     document.getElementById('nav-'+p)?.classList.toggle('active',p===page);
     document.getElementById('btab-'+p)?.classList.toggle('active',p===page);
     document.getElementById('page-'+p)?.classList.toggle('active',p===page);
