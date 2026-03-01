@@ -20,4 +20,4 @@
 | 21/02/26 | share+pr+cafe | Dev stage 1
 | 26/02/26 | Trackracer | sample code (html) w/ satisfied ui✅
 | 28/02/26 | sharing blog | sample code (html) w/ satisfied ui✅
-| 01/03/26 | overall | [done sample code (html) w/ satisfied ui✅](https://github.com/incluDna/Deenager_elements/blob/5dfd5bd654eea2e4b93aab94b474c10317e4b3bd/Promote/index2.html) ->[https://includna.github.io/test_deenager_sample_v5/]
+| 01/03/26 | overall | [done sample code (html) w/ satisfied ui✅](https://github.com/incluDna/Deenager_elements/blob/5dfd5bd654eea2e4b93aab94b474c10317e4b3bd/Promote/index2.html) ->[demo web](https://includna.github.io/test_deenager_sample_v5/)
